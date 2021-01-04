@@ -77,7 +77,8 @@ export default {
       }
       todo.editing = false
     },
-    removeTodo(index) {
+    removeTodo(id) {
+      let index = this.todos.map(item => item.id).indexOf( id)
       this.todos.splice(index, 1)
     },
     finishedEdit(data) {

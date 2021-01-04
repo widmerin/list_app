@@ -5,7 +5,7 @@
       <div v-if="!editing" @dblclick="editTodo" class="todo-item-label" :class="{ completed : completed }">{{ title }} </div>
       <input v-else class="todo-item-edit" type="text" v-model="title" @blur="doneEdit" @keyup.enter="doneEdit" @keyup.esc="cancelEdit" v-focus>
     </div>
-    <div class="remove-item" @click="removeTodo(index)">
+    <div class="remove-item" @click="removeTodo">
       &times;
     </div>
   </div>
@@ -63,8 +63,8 @@
         this.beforeEditCache = this.title
         this.editing = true
       },
-      removeTodo(index) {
-        this.$emit('removedTodo', index)
+      removeTodo() {
+        this.$emit('removedTodo', this.id)
       }
     }
   }
