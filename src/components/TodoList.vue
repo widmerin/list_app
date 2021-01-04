@@ -1,9 +1,15 @@
 <template>
   <div>
     <input type="text" class="todo-input" placeholder="What do you need?" v-model="newTodo" @keyup.enter="addTodo"/>
-    <div v-for="todo in todos" :key="todo.id" class="todo-item">
-        {{ todo.title }}
-
+    <div v-for="(todo, index) in todos" :key="todo.id" class="todo-item">
+      <div class="todo-item-left">
+        <input type="checkbox" v-model="todo.completed" />
+        <div v-if="!todo.editing" @dblclick="editTodo(todo)" class="todo-item-label" :class="{ completed : todo.completed }">{{ todo.title }}</div>
+        <input v-else class="todo-item-edit" type="text" v-model="todo.title" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" @keyup.esc="cancelEdit(todo)" v-focus>
+      </div>
+      <div class="remove-item" @click="removeTodo(index)">
+        &times;
+      </div>
     </div>
   </div>
 </template>
@@ -13,25 +19,36 @@ export default {
   name: 'TodoList',
   data() {
     return {
-      newToDo: '',
+      newTodo: '',
       idForTodo: 4,
+      beforeEditCache: '',
       todos: [
         {
           'id': 1,
           'title': 'Task 1',
-          'completed': false
+          'completed': false,
+          'editing': false,
         },
         {
           'id': 2,
           'title': 'Task 2',
-          'completed': false
+          'completed': false,
+          'editing': false,
         },
         {
           'id': 3,
           'title': 'Task 3',
-          'completed': true
+          'completed': true,
+          'editing': false,
         }
-      ]
+      ],
+    }
+  },
+  directives: {
+    focus: {
+      inserted: function (el) {
+        el.focus()
+      }
     }
   },
   methods: {
@@ -46,7 +63,24 @@ export default {
       })
       this.newTodo = ''
       this.idForTodo++
-    }
+    },
+    cancelEdit(todo) {
+      todo.editing = false
+      todo.title = this.beforeEditCache
+    },
+    editTodo(todo) {
+      this.beforeEditCache = todo.title
+      todo.editing = true
+    },
+    doneEdit(todo) {
+      if (todo.title.trim() == '') {
+        todo.title = this.beforeEditCache
+      }
+      todo.editing = false
+    },
+    removeTodo(index) {
+      this.todos.splice(index, 1)
+    },
   }
 }
 </script>
