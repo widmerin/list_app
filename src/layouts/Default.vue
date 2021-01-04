@@ -3,7 +3,6 @@
     <header class="header">
 
     </header>
-    <slot/>
   </div>
 </template>
 

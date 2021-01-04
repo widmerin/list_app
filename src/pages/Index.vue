@@ -12,7 +12,7 @@ export default {
     TodoList
   },
   metaInfo: {
-    title: 'Hello, world!'
+    title: 'Shopping App'
   }
 }
 </script>
