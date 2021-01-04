@@ -2,35 +2,22 @@
   <div>
     <input type="text" class="todo-input" placeholder="What do you need?" v-model="newTodo" @keyup.enter="addTodo"/>
     <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-      <div v-for="(todo, index) in todosFilteredActive" :key="todo.id" class="todo-item">
-        <div class="todo-item-left">
-          <input type="checkbox" v-model="todo.completed" />
-          <div v-if="!todo.editing" @dblclick="editTodo(todo)" class="todo-item-label" :class="{ completed : todo.completed }">{{ todo.title }}</div>
-          <input v-else class="todo-item-edit" type="text" v-model="todo.title" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" @keyup.esc="cancelEdit(todo)" v-focus>
-        </div>
-        <div class="remove-item" @click="removeTodo(index)">
-          &times;
-        </div>
-      </div>
+      <todo-item v-for="(todo, index) in todosFilteredActive" :key="todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></todo-item>
     </transition-group>
     <div class="todos-completed" v-if="todosFilteredCompleted && todosFilteredCompleted.length">
       <p>Completed Tasks</p>
-      <div v-for="(todo, index) in todosFilteredCompleted" :key="todo.id" class="todo-item">
-        <div class="todo-item-left">
-          <input type="checkbox" v-model="todo.completed" />
-          <div v-if="!todo.editing" @dblclick="editTodo(todo)" class="todo-item-label" :class="{ completed : todo.completed }">{{ todo.title }}</div>
-          <input v-else class="todo-item-edit" type="text" v-model="todo.title" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" @keyup.esc="cancelEdit(todo)" v-focus>
-        </div>
-        <div class="remove-item" @click="removeTodo(index)">
-          &times;
-        </div>
-      </div>
+      <todo-item  v-for="(todo, index) in todosFilteredCompleted" :key="todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></todo-item >
     </div>
   </div>
 </template>
 
 <script>
+import TodoItem from '~/components/TodoItem.vue'
+
 export default {
+  components: {
+    TodoItem
+  },
   name: 'TodoList',
   data() {
     return {
@@ -59,13 +46,6 @@ export default {
       ],
     }
   },
-  directives: {
-    focus: {
-      inserted: function (el) {
-        el.focus()
-      }
-    }
-  },
   computed: {
     todosFilteredActive() {
       return this.todos.filter(todo => !todo.completed)
@@ -91,10 +71,6 @@ export default {
       todo.editing = false
       todo.title = this.beforeEditCache
     },
-    editTodo(todo) {
-      this.beforeEditCache = todo.title
-      todo.editing = true
-    },
     doneEdit(todo) {
       if (todo.title.trim() == '') {
         todo.title = this.beforeEditCache
@@ -104,6 +80,12 @@ export default {
     removeTodo(index) {
       this.todos.splice(index, 1)
     },
+    finishedEdit(data) {
+      // find index of your todo item
+      let index = this.todos.map(item => item.id).indexOf( data.todo.id)
+      // update todo item data
+      this.todos.splice(index, 1, data.todo)
+    }
   }
 }
 </script>
