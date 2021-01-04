@@ -1,14 +1,29 @@
 <template>
   <div>
     <input type="text" class="todo-input" placeholder="What do you need?" v-model="newTodo" @keyup.enter="addTodo"/>
-    <div v-for="(todo, index) in todos" :key="todo.id" class="todo-item">
-      <div class="todo-item-left">
-        <input type="checkbox" v-model="todo.completed" />
-        <div v-if="!todo.editing" @dblclick="editTodo(todo)" class="todo-item-label" :class="{ completed : todo.completed }">{{ todo.title }}</div>
-        <input v-else class="todo-item-edit" type="text" v-model="todo.title" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" @keyup.esc="cancelEdit(todo)" v-focus>
+    <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
+      <div v-for="(todo, index) in todosFilteredActive" :key="todo.id" class="todo-item">
+        <div class="todo-item-left">
+          <input type="checkbox" v-model="todo.completed" />
+          <div v-if="!todo.editing" @dblclick="editTodo(todo)" class="todo-item-label" :class="{ completed : todo.completed }">{{ todo.title }}</div>
+          <input v-else class="todo-item-edit" type="text" v-model="todo.title" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" @keyup.esc="cancelEdit(todo)" v-focus>
+        </div>
+        <div class="remove-item" @click="removeTodo(index)">
+          &times;
+        </div>
       </div>
-      <div class="remove-item" @click="removeTodo(index)">
-        &times;
+    </transition-group>
+    <div class="todos-completed" v-if="todosFilteredCompleted && todosFilteredCompleted.length">
+      <p>Completed Tasks</p>
+      <div v-for="(todo, index) in todosFilteredCompleted" :key="todo.id" class="todo-item">
+        <div class="todo-item-left">
+          <input type="checkbox" v-model="todo.completed" />
+          <div v-if="!todo.editing" @dblclick="editTodo(todo)" class="todo-item-label" :class="{ completed : todo.completed }">{{ todo.title }}</div>
+          <input v-else class="todo-item-edit" type="text" v-model="todo.title" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" @keyup.esc="cancelEdit(todo)" v-focus>
+        </div>
+        <div class="remove-item" @click="removeTodo(index)">
+          &times;
+        </div>
       </div>
     </div>
   </div>
@@ -49,6 +64,14 @@ export default {
       inserted: function (el) {
         el.focus()
       }
+    }
+  },
+  computed: {
+    todosFilteredActive() {
+      return this.todos.filter(todo => !todo.completed)
+    },
+    todosFilteredCompleted() {
+      return this.todos.filter(todo => todo.completed)
     }
   },
   methods: {
@@ -134,6 +157,9 @@ export default {
   .completed {
     text-decoration: line-through;
     color: grey;
+  }
+  .todos-completed {
+    padding-top: 20px;
   }
   .extra-container {
     display: flex;
