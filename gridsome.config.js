@@ -18,9 +18,9 @@ module.exports = {
         disableServiceWorker: true,
         serviceWorkerPath: "service-worker.js",
         cachedFileTypes: "js,json,css,html,png,jpg,jpeg,svg",
-        shortName: "List",
+        shortName: "The List",
         themeColor: "#666600",
-        backgroundColor: "#ffffff",
+        backgroundColor: "#000000",
         icon: "src/favicon.png", // must be provided like 'src/favicon.png'
         msTileImage: "",
         msTileColor: "#666600",
