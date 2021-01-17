@@ -1,7 +1,24 @@
 <template>
-  <div class="list-header">
-    <input type="text" class="list-header-input" placeholder="What do you need?" v-model="newTodo" @keyup.enter="addTodo"/>
+  <div>
+    <nav class="nav-extended gray darken-3">
+      <div class="nav-content">
+        <ul class="tabs tabs-transparent">
+          <li class="tab"><a href="#test1" class="active">Einkaufen</a></li>
+          <li class="tab"><a href="#test2">Wohnen</a></li>
+          <li class="tab"><a href="#test3">Essensideen</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="input-field">
+        <i class="material-icons prefix">add</i>
+        <input type="text" class="list-header-input" placeholder="Add to List ..." v-model="newTodo" @keyup.enter="addTodo"/>
+      </div>
+
   </div>
+  <!--<div class="list-header">
+    <input type="text" class="list-header-input" placeholder="What do you need?" v-model="newTodo" @keyup.enter="addTodo"/>
+  </div>-->
 </template>
 
 <script>
@@ -24,20 +41,26 @@
   }
 </script>
 <style lang='scss'>
-.list-header {
-  display: flex;
-  .list-header-input {
-    width: 100%;
-    padding: 10px 18px 10px 40px;
-    font-size: 18px;
-    margin-bottom: 16px;
-    background: url(../assets/logo.svg) no-repeat scroll 10px 10px;
-
-    background-size: 20px 20px;
-    &:focus {
-      outline: 0;
+nav {
+  .brand-logo {
+    img {
+      max-width: 25px;
     }
+
+  }
+  .input-field {
+  label.active {
+  color: royalblue !important;
+}
+input:focus {
+  border-bottom: 1px solid royalblue !important;
+  box-shadow: 0 1px 0 0 royalblue !important;
+}
   }
 
+
 }
+
+
+
 </style>

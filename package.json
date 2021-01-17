@@ -9,6 +9,8 @@
   "dependencies": {
     "gridsome": "^0.7.0",
     "gridsome-plugin-pwa": "^0.0.18",
+    "material-design-icons": "^3.0.1",
+    "materialize-css": "^1.0.0-rc.2",
     "register-service-worker": "^1.7.2"
   },
   "devDependencies": {

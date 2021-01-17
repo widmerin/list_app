@@ -138,7 +138,6 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 16px;
     border-top: 1px solid lightgrey;
     padding-top: 14px;
     margin-bottom: 14px;
