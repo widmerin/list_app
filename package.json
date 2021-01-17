@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "gridsome": "^0.7.0",
-    "gridsome-plugin-pwa": "0.0.18"
+    "gridsome-plugin-pwa": "^0.0.18",
+    "register-service-worker": "^1.7.2"
   },
   "devDependencies": {
     "node-sass": "^5.0.0",
