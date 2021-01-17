@@ -1,18 +1,17 @@
 <template>
   <div id="app" class="container">
-    <img src="../assets/logo.svg" class="logo">
-    <todo-list></todo-list>
+    <list></list>
   </div>
 </template>
 <script>
-import TodoList from '~/components/TodoList.vue'
+import List from '~/components/List.vue'
 
 export default {
     components: {
-    TodoList
+    List
   },
   metaInfo: {
-    title: 'Shopping App'
+    title: 'The List'
   }
 }
 </script>

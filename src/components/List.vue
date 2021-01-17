@@ -1,24 +1,26 @@
 <template>
   <div>
-    <input type="text" class="todo-input" placeholder="What do you need?" v-model="newTodo" @keyup.enter="addTodo"/>
+    <list-header @addedTodo="addTodo"></list-header>
     <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-      <todo-item v-for="(todo, index) in todosFilteredActive" :key="todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></todo-item>
+      <list-item v-for="(todo, index) in todosFilteredActive" :key="todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item>
     </transition-group>
     <div class="todos-completed" v-if="todosFilteredCompleted && todosFilteredCompleted.length">
       <p>Completed Tasks</p>
-      <todo-item  v-for="(todo, index) in todosFilteredCompleted" :key="todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></todo-item >
+      <list-item  v-for="(todo, index) in todosFilteredCompleted" :key="todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item >
     </div>
   </div>
 </template>
 
 <script>
-import TodoItem from '~/components/TodoItem.vue'
+import ListItem from '~/components/ListItem.vue'
+import ListHeader from './ListHeader.vue'
 
 export default {
   components: {
-    TodoItem
+    ListItem,
+    ListHeader
   },
-  name: 'TodoList',
+  name: 'List',
   data() {
     return {
       newTodo: '',
@@ -55,13 +57,10 @@ export default {
     }
   },
   methods: {
-    addTodo() {
-      if (this.newTodo.trim().length == 0) {
-        return
-      }
+    addTodo(title) {
       this.todos.push({
         id: this.idForTodo,
-        title: this.newTodo,
+        title: title,
         completed: false,
       })
       this.newTodo = ''
@@ -93,16 +92,7 @@ export default {
 
 <style lang='scss'>
   @import url("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css");
-  .todo-input {
-    width: 100%;
-    padding: 10px 18px;
-    font-size: 18px;
-    margin-bottom: 16px;
-    &:focus {
-      outline: 0;
-    }
-  }
-  .todo-item {
+  .list-item {
     margin-bottom: 12px;
     display: flex;
     align-items: center;
@@ -116,16 +106,16 @@ export default {
       color: black;
     }
   }
-  .todo-item-left { // later
+  .list-item-left { // later
     display: flex;
     align-items: center;
   }
-  .todo-item-label {
+  .list-item-label {
     padding: 10px;
     border: 1px solid white;
     margin-left: 12px;
   }
-  .todo-item-edit {
+  .list-item-edit {
     font-size: 24px;
     color: #2c3e50;
     margin-left: 12px;

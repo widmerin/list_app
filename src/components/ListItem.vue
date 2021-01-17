@@ -1,9 +1,9 @@
 <template>
-  <div class="todo-item">
-    <div class="todo-item-left">
+  <div class="list-item">
+    <div class="list-item-left">
       <input type="checkbox" v-model="completed" @change="doneEdit">
-      <div v-if="!editing" @dblclick="editTodo" class="todo-item-label" :class="{ completed : completed }">{{ title }} </div>
-      <input v-else class="todo-item-edit" type="text" v-model="title" @blur="doneEdit" @keyup.enter="doneEdit" @keyup.esc="cancelEdit" v-focus>
+      <div v-if="!editing" @dblclick="editTodo" class="list-item-label" :class="{ completed : completed }">{{ title }} </div>
+      <input v-else class="list-item-edit" type="text" v-model="title" @blur="doneEdit" @keyup.enter="doneEdit" @keyup.esc="cancelEdit" v-focus>
     </div>
     <div class="remove-item" @click="removeTodo">
       &times;
@@ -13,7 +13,7 @@
 
 <script>
   export default {
-    name: 'todo-item',
+    name: 'list-item',
     props: {
       todo: {
         type: Object,
