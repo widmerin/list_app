@@ -1,6 +1,6 @@
 <template>
   <div>
-  <nav class="nav-extended  grey darken-3">
+  <nav class="nav-extended grey darken-3">
     <div class="nav-content">
       <ul class="tabs tabs-transparent">
           <li class="tab"><a href="#test1" class="active">Einkaufen</a></li>
@@ -9,7 +9,7 @@
       </ul>
     </div>
   </nav>
-  <div class="input-field list-header-input">
+  <div class="input-field list-header-input grey darken-3">
     <i class="material-icons prefix">add</i>
     <input type="text" placeholder="Add to List ..." v-model="newTodo" @keyup.enter="addTodo"/>
   </div>
@@ -49,10 +49,9 @@ nav {
   }
 }
 .list-header-input {
+  color: #fff;
   padding: 0 10px;
-  .prefix {
-    color: #424242;
-  }
+  margin: 0;
 }
 
 

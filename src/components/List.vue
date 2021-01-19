@@ -6,7 +6,7 @@
         <list-item v-for="(todo, index) in todosFilteredActive" :key="todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item>
       </transition-group>
       <div class="todos-completed" v-if="todosFilteredCompleted && todosFilteredCompleted.length">
-        <p class="color-darken-3"><b>Completed Tasks</b></p>
+        <p class="todos-title">Completed Tasks</p>
         <list-item  v-for="(todo, index) in todosFilteredCompleted" :key="todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item >
       </div>
     </div>
@@ -97,10 +97,13 @@ export default {
   padding: 15px;
   .completed {
     text-decoration: line-through;
-    color: grey;
   }
   .todos-completed {
     padding-top: 20px;
+    .todos-title {
+      color: #fff;
+      text-transform: uppercase;
+    }
   }
   .extra-container {
     display: flex;
