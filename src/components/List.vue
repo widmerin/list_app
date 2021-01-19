@@ -94,7 +94,7 @@ export default {
 
 <style lang='scss'>
 .list-content {
-  padding: 15px;
+  padding: 0 15px 15px;
   .completed {
     text-decoration: line-through;
   }

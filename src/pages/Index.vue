@@ -25,11 +25,7 @@ export default {
 }
 
 body {
-  background: url('../assets/background3.jpg') no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+  background-color: #48426d;
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

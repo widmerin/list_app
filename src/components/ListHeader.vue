@@ -1,6 +1,6 @@
 <template>
   <div>
-  <nav class="nav-extended grey darken-3">
+  <nav class="nav-extended">
     <div class="nav-content">
       <ul class="tabs tabs-transparent">
           <li class="tab"><a href="#test1" class="active">Einkaufen</a></li>
@@ -9,9 +9,9 @@
       </ul>
     </div>
   </nav>
-  <div class="input-field list-header-input grey darken-3">
+  <div class="input-field list-header-add">
     <i class="material-icons prefix">add</i>
-    <input type="text" placeholder="Add to List ..." v-model="newTodo" @keyup.enter="addTodo"/>
+    <input type="text" placeholder="Add to List ..." class="list-header-add-input" v-model="newTodo" @keyup.enter="addTodo"/>
   </div>
 
   </div>
@@ -41,6 +41,7 @@
 </script>
 <style lang='scss'>
 nav {
+  background-color: #312c51;
   .brand-logo {
     img {
       max-width: 25px;
@@ -48,10 +49,19 @@ nav {
 
   }
 }
-.list-header-input {
+.list-header-add {
+    background-color: #312c51;
+
   color: #fff;
   padding: 0 10px;
-  margin: 0;
+  margin: 15px;
+  i {
+    border: none;
+  }
+  .list-header-add-input {
+    color: #fff;
+    border: none !important;
+  }
 }
 
 

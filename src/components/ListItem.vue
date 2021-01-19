@@ -78,7 +78,7 @@
   padding: 10px;
   border: 1px solid #9e9e9e;
   border-radius: 5px;
-  margin: 5px 0;
+  margin: 2px 0;
   background-color: #fff;
 
   .list-item-label {
@@ -91,7 +91,7 @@
     height: 2em;
   }
   .remove-item {
-     cursor: pointer;
+    cursor: pointer;
     flex-direction: flex-end;
   }
 }
