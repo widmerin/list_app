@@ -1,12 +1,14 @@
 <template>
-  <div>
+  <div class="list">
     <list-header @addedTodo="addTodo"></list-header>
-    <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-      <list-item v-for="(todo, index) in todosFilteredActive" :key="todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item>
-    </transition-group>
-    <div class="todos-completed" v-if="todosFilteredCompleted && todosFilteredCompleted.length">
-      <p>Completed Tasks</p>
-      <list-item  v-for="(todo, index) in todosFilteredCompleted" :key="todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item >
+    <div class="list-content">
+      <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
+        <list-item v-for="(todo, index) in todosFilteredActive" :key="todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item>
+      </transition-group>
+      <div class="todos-completed" v-if="todosFilteredCompleted && todosFilteredCompleted.length">
+        <p class="color-darken-3"><b>Completed Tasks</b></p>
+        <list-item  v-for="(todo, index) in todosFilteredCompleted" :key="todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item >
+      </div>
     </div>
   </div>
 </template>
@@ -91,42 +93,8 @@ export default {
 </script>
 
 <style lang='scss'>
-  @import url("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css");
-  .list-item {
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    animation-duration: 0.3s;
-  }
-  .remove-item {
-    cursor: pointer;
-    margin-left: 14px;
-    &:hover {
-      color: black;
-    }
-  }
-  .list-item-left { // later
-    display: flex;
-    align-items: center;
-  }
-  .list-item-label {
-    padding: 10px;
-    border: 1px solid white;
-    margin-left: 12px;
-  }
-  .list-item-edit {
-    font-size: 24px;
-    color: #2c3e50;
-    margin-left: 12px;
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc; //override defaults
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    &:focus {
-      outline: none;
-    }
-  }
+.list-content {
+  padding: 15px;
   .completed {
     text-decoration: line-through;
     color: grey;
@@ -153,14 +121,7 @@ export default {
       outline: none;
     }
   }
-  .active {
-    background: lightgreen;
-  }
-  // CSS Transitions
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .2s;
-  }
-  .fade-enter, .fade-leave-to {
-    opacity: 0;
-  }
+}
+
+
 </style>

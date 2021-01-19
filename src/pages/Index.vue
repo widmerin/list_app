@@ -28,14 +28,9 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* text-align: center; */
-  color: #2c3e50;
   margin-top: 60px;
-  font-size: 24px;
-  padding: 20px;
-}
-.logo {
-  display: block;
-  margin: 20px auto;
-  height: 75px;
+  color: #424242;
+  font-size: 18px;
+  min-height: 350px;
 }
 </style>

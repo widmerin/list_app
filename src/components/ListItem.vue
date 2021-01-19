@@ -1,13 +1,15 @@
 <template>
   <div class="list-item">
-    <div class="list-item-left">
-      <input type="checkbox" v-model="completed" @change="doneEdit">
-      <div v-if="!editing" @dblclick="editTodo" class="list-item-label" :class="{ completed : completed }">{{ title }} </div>
-      <input v-else class="list-item-edit" type="text" v-model="title" @blur="doneEdit" @keyup.enter="doneEdit" @keyup.esc="cancelEdit" v-focus>
-    </div>
-    <div class="remove-item" @click="removeTodo">
-      &times;
-    </div>
+      <div class="list-item-label">
+        <label>
+          <input type="checkbox"  v-model="completed" @change="doneEdit" /><span></span>
+        </label>
+          <span v-if="!editing" @dblclick="editTodo" :class="{ completed : completed }">{{ title }}</span>
+          <input v-else class="list-item-edit" type="text" v-model="title" @blur="doneEdit" @keyup.enter="doneEdit" @keyup.esc="cancelEdit" v-focus>
+      </div>
+      <div class="remove-item" @click="removeTodo">&times;</div>
+
+
   </div>
 </template>
 
@@ -69,3 +71,27 @@
     }
   }
 </script>
+
+<style lang='scss'>
+.list-item {
+  display: flex;
+  padding: 10px;
+  border: 1px solid #9e9e9e;
+  border-radius: 5px;
+  margin: 5px 0;
+
+  .list-item-label {
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+  }
+
+  .list-item-edit {
+    height: 2em;
+  }
+  .remove-item {
+     cursor: pointer;
+    flex-direction: flex-end;
+  }
+}
+</style>
