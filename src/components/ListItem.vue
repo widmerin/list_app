@@ -17,7 +17,7 @@
   export default {
     name: 'list-item',
     props: {
-      todo: {
+      task: {
         type: Object,
         required: true,
       },
@@ -28,10 +28,10 @@
     },
     data() {
       return {
-        'id': this.todo.id,
-        'title': this.todo.title,
-        'completed': this.todo.completed,
-        'editing': this.todo.editing,
+        'id': this.task.id,
+        'title': this.task.title,
+        'completed': this.task.completed,
+        'editing': this.task.editing,
         'beforeEditCache': '',
       }
     },
@@ -53,7 +53,7 @@
         }
         this.editing = false
         this.$emit('finishedEdit', {
-          'todo': {
+          'task': {
             'id': this.id,
             'title': this.title,
             'completed': this.completed,

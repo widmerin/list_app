@@ -3,9 +3,7 @@
   <nav class="nav-extended">
     <div class="nav-content">
       <ul class="tabs tabs-transparent">
-          <li class="tab"><a href="#test1" class="active">Einkaufen</a></li>
-          <li class="tab"><a href="#test2">Wohnen</a></li>
-          <li class="tab"><a href="#test3">Essensideen</a></li>
+        <li class="tab" v-for="(list, index)  in lists" :key="list"  v-bind:key="list.listId"><a href="#" class="active" @click="selectList(list.listId)">{{ list.name }} {{ list.listId }}</a></li>
       </ul>
     </div>
   </nav>
@@ -15,14 +13,17 @@
   </div>
 
   </div>
-  <!--<div class="list-header">
-    <input type="text" class="list-header-input" placeholder="What do you need?" v-model="newTodo" @keyup.enter="addTodo"/>
-  </div>-->
-</template>
+  </template>
 
 <script>
   export default {
     name: 'list-header',
+    props: {
+      lists: {
+        type: Array,
+        required: true,
+      }
+    },
     data() {
       return {
         newTodo: '',
@@ -35,6 +36,9 @@
         }
         this.$emit('addedTodo', this.newTodo)
         this.newTodo = ''
+      },
+      selectList(listId) {
+        this.$emit('selectedList', listId)
       }
     }
   }
