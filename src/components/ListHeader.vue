@@ -3,7 +3,7 @@
   <nav class="nav-extended">
     <div class="nav-content">
       <ul class="tabs tabs-transparent">
-        <li class="tab" v-for="(list, index)  in lists" :key="list"  v-bind:key="list.listId"><a href="#" class="active" @click="selectList(list.listId)">{{ list.name }} {{ list.listId }}</a></li>
+        <li class="tab" v-for="(list, index)  in lists" :key="index"><a href="#" class="active" @click="selectList(index)">{{ list.name }}</a></li>
       </ul>
     </div>
   </nav>
@@ -13,7 +13,10 @@
   </div>
 
   </div>
-  </template>
+  <!--<div class="list-header">
+    <input type="text" class="list-header-input" placeholder="What do you need?" v-model="newTodo" @keyup.enter="addTodo"/>
+  </div>-->
+</template>
 
 <script>
   export default {
@@ -37,9 +40,9 @@
         this.$emit('addedTodo', this.newTodo)
         this.newTodo = ''
       },
-      selectList(listId) {
-        this.$emit('selectedList', listId)
-      }
+      selectList(id) {
+        this.$emit('selectedList', id)
+      },
     }
   }
 </script>

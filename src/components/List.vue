@@ -1,15 +1,13 @@
-/* <template>
+<template>
   <div class="list">
     <list-header @addedTodo="addTodo" :lists="lists" @selectedList="selectList"></list-header>
     <div class="list-content">
-      <button @click="testButton2">BUTTON 2</button>
-      <button @click="testButton3">BUTTON 3</button>
       <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-        <list-item v-for="(task, index) in tasksFilteredActive" :key="task.id" :task="task" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item>
+        <list-item v-for="(todo, index) in tasksFilteredActive" :key="componentActiveTasks" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item>
       </transition-group>
-      <div class="todos-completed" v-if="tasksFilteredCompleted && tasksFilteredCompleted.length">
-        <p class="todos-title">Completed Tasks     {{ currentList }}</p>
-        <list-item  v-for="(task, index) in tasksFilteredCompleted" :key="task.id" :task="task" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item >
+      <div class="tasks-completed" v-if="tasksFilteredCompleted && tasksFilteredCompleted.length">
+        <p class="tasks-title">Completed Tasks</p>
+        <list-item  v-for="(todo, index) in tasksFilteredCompleted" :key="componentActiveTasks" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item >
       </div>
     </div>
   </div>
@@ -27,68 +25,70 @@ export default {
   name: 'List',
   data() {
     return {
-      currentListId: '0',
+      componentActiveTasks: 0,
+      componentCompletedTasks: 0,
       newTodo: '',
       idForTodo: 4,
+      currentListId: '0',
       beforeEditCache: '',
       lists: [
-        {
-          listId: '11',
-          name: 'Einkaufen',
-          tasks: [
-            {
-              'id': 1,
-              'title': 'Zitrone',
-              'completed': false,
-              'editing': false,
-            },
-            {
-              'id': 2,
-              'title': 'Tofu',
-              'completed': false,
-              'editing': false,
-            },
-            {
-              'id': 3,
-              'title': 'Mehl',
-              'completed': true,
-              'editing': false,
-            }
-          ],
-        },
-        {
-          listId: '12',
-          name: 'Wohnen',
-          tasks: [
-            {
-              'id': 1,
-              'title': 'Lampe',
-              'completed': false,
-              'editing': false,
-            },
-            {
-              'id': 2,
-              'title': 'Vorhänge',
-              'completed': false,
-              'editing': false,
-            }
-          ],
-        },
-        {
-          listId: '13',
-          name: 'Essensideen',
-          tasks: [
-            {
-              'id': 1,
-              'title': 'Curry',
-              'completed': false,
-              'editing': false,
-            },
-            {
-              'id': 2,
-              'title': 'Pizza',
-              'completed': false,
-              'editing': false,
+          {
+            listId: '11',
+            name: 'Einkaufen',
+            tasks: [
+              {
+                'id': 1,
+                'title': 'Zitrone',
+                'completed': false,
+                'editing': false,
+              },
+              {
+                'id': 2,
+                'title': 'Tofu',
+                'completed': false,
+                'editing': false,
+              },
+              {
+                'id': 3,
+                'title': 'Mehl',
+                'completed': true,
+                'editing': false,
+              }
+            ],
+          },
+          {
+            listId: '12',
+            name: 'Wohnen',
+            tasks: [
+              {
+                'id': 11,
+                'title': 'Lampe',
+                'completed': false,
+                'editing': false,
+              },
+              {
+                'id': 12,
+                'title': 'Vorhänge',
+                'completed': false,
+                'editing': false,
+              }
+            ],
+          },
+          {
+            listId: '13',
+            name: 'Essensideen',
+            tasks: [
+              {
+                'id': 21,
+                'title': 'Curry',
+                'completed': false,
+                'editing': false,
+              },
+              {
+                'id': 22,
+                'title': 'Pizza',
+                'completed': false,
+                'editing': false,
             }
           ],
         }
@@ -96,22 +96,22 @@ export default {
     }
   },
   computed: {
-
     tasksFilteredActive() {
-      return this.lists[this.currentListId].tasks.filter(task => !task.completed)
+      return this.lists[this.currentListId].tasks.filter(todo => !todo.completed)
     },
     tasksFilteredCompleted() {
-      return this.lists[this.currentListId].tasks.filter(task => task.completed)
+      return this.lists[this.currentListId].tasks.filter(todo => todo.completed)
     }
   },
   methods: {
-    testButton2() {
-      this.currentListId = "2"
-      console.log("done")
+    forceRerender() {
+      this.componentActiveTasks += 1;
+      this.componentCompletedTasks += 1;
+      console.log("update ")
     },
-    testButton3() {
-      this.currentListId = "3"
-      console.log("done")
+    selectList(id) {
+      this.currentListId = id
+      this.forceRerender()
     },
     addTodo(title) {
       this.lists[this.currentListId].tasks.push({
@@ -133,18 +133,15 @@ export default {
       todo.editing = false
     },
     removeTodo(id) {
-      let index = this.lists[currentListId].tasks.map(item => item.id).indexOf( id)
+      let index = this.lists[this.currentListId].tasks.map(item => item.id).indexOf( id)
       this.lists[this.currentListId].tasks.splice(index, 1)
     },
     finishedEdit(data) {
       // find index of your todo item
-      let index = this.todos.map(item => item.id).indexOf( data.todo.id)
+      let index = this.lists[this.currentListId].tasks.map(item => item.id).indexOf( data.todo.id)
       // update todo item data
       this.lists[this.currentListId].tasks.splice(index, 1, data.todo)
-    },
-    selectList(currentId) {
-      listId = this.lists.findIndex(item => item.listId == currentId)
-    },
+    }
   }
 }
 </script>
@@ -155,9 +152,9 @@ export default {
   .completed {
     text-decoration: line-through;
   }
-  .todos-completed {
+  .tasks-completed {
     padding-top: 20px;
-    .todos-title {
+    .tasks-title {
       color: #fff;
       text-transform: uppercase;
     }
@@ -185,4 +182,3 @@ export default {
 
 
 </style>
- */
