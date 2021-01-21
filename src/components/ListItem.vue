@@ -80,6 +80,7 @@
   border-radius: 5px;
   margin: 2px 0;
   background-color: #fff;
+  color: #48426d;
 
   .list-item-label {
     width: 100%;
