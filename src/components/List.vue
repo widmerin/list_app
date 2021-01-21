@@ -2,9 +2,11 @@
   <div class="list">
     <list-header @addedTodo="addTodo" :lists="lists" @selectedList="selectList"></list-header>
     <div class="list-content">
-      <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-        <list-item v-for="(todo, index) in tasksFilteredActive" :key="componentListItem + todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item>
-      </transition-group>
+      <div class="tasks-active">
+        <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
+          <list-item v-for="(todo, index) in tasksFilteredActive" :key="componentListItem + todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item>
+        </transition-group>
+      </div>
       <div class="tasks-completed" v-if="tasksFilteredCompleted && tasksFilteredCompleted.length">
         <p class="tasks-title">Completed Tasks</p>
         <list-item  v-for="(todo, index) in tasksFilteredCompleted" :key="componentListItem + todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item >

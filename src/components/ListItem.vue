@@ -90,9 +90,6 @@
     display: flex;
     align-items: center;
     justify-content: stretch;
-    [type="checkbox"]+span:not(.lever):before, [type="checkbox"]:not(.filled-in)+span:not(.lever):after{
-      top:2px;
-    }
   }
 
   .list-item-edit {
@@ -102,5 +99,15 @@
     cursor: pointer;
     flex-direction: flex-end;
   }
+
 }
+  .tasks-active {
+    .list-item {
+      .list-item-label {
+        [type="checkbox"]+span:not(.lever):before{
+          top:2px;
+        }
+      }
+    }
+  }
 </style>
