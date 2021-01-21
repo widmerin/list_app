@@ -3,11 +3,11 @@
     <list-header @addedTodo="addTodo" :lists="lists" @selectedList="selectList"></list-header>
     <div class="list-content">
       <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-        <list-item v-for="(todo, index) in tasksFilteredActive" :key="componentActiveTasks + todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item>
+        <list-item v-for="(todo, index) in tasksFilteredActive" :key="componentListItem + todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item>
       </transition-group>
       <div class="tasks-completed" v-if="tasksFilteredCompleted && tasksFilteredCompleted.length">
         <p class="tasks-title">Completed Tasks</p>
-        <list-item  v-for="(todo, index) in tasksFilteredCompleted" :key="componentActiveTasks + todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item >
+        <list-item  v-for="(todo, index) in tasksFilteredCompleted" :key="componentListItem + todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item >
       </div>
     </div>
   </div>
@@ -25,8 +25,7 @@ export default {
   name: 'List',
   data() {
     return {
-      componentActiveTasks: 0,
-      componentCompletedTasks: 0,
+      componentListItem: 0,
       newTodo: '',
       idForTodo: 4,
       currentListId: '0',
@@ -105,8 +104,7 @@ export default {
   },
   methods: {
     forceRerender() {
-      this.componentActiveTasks += 1;
-      this.componentCompletedTasks += 1;
+      this.componentListItem += 1;
     },
     selectList(id) {
       this.currentListId = id

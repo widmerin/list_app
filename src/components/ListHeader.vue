@@ -8,7 +8,7 @@
     </div>
   </nav>
   <div class="input-field list-header-add">
-    <i class="material-icons prefix">add</i>
+    <i class="add-icon">+</i>
     <input type="text" placeholder="Add to List ..." class="list-header-add-input" v-model="newTodo" @keyup.enter="addTodo"/>
   </div>
 
@@ -68,6 +68,8 @@ nav {
   .list-header-add-input {
     color: #fff;
     border: none !important;
+    margin: 0;
+    padding: 0;
   }
 }
 

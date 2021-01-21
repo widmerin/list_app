@@ -20,7 +20,7 @@ module.exports = {
         cachedFileTypes: "js,json,css,html,png,jpg,jpeg,svg",
         shortName: "The List",
         themeColor: "#666600",
-        backgroundColor: "#000000",
+        backgroundColor: "#48426d",
         icon: "src/favicon.png", // must be provided like 'src/favicon.png'
         msTileImage: "",
         msTileColor: "#666600",
