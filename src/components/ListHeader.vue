@@ -8,7 +8,7 @@
     </div>
   </nav>
   <div class="input-field list-header-add">
-    <i class="add-icon">+</i>
+    <span class="list-header-add-icon">+</span>
     <input type="text" placeholder="Add to List ..." class="list-header-add-input" v-model="newTodo" @keyup.enter="addTodo"/>
   </div>
 
@@ -57,19 +57,24 @@ nav {
   }
 }
 .list-header-add {
-    background-color: #312c51;
-
-  color: #fff;
+  background-color: #312c51;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 0 10px;
+  color: #fff;
   margin: 15px;
-  i {
-    border: none;
-  }
+
   .list-header-add-input {
     color: #fff;
     border: none !important;
-    margin: 0;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .list-header-add-icon {
+    min-width: 37px;
+    font-size: 1.7em;
+
   }
 }
 

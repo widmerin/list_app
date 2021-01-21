@@ -75,6 +75,9 @@
 <style lang='scss'>
 .list-item {
   display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   padding: 10px;
   border: 1px solid #9e9e9e;
   border-radius: 5px;
@@ -85,7 +88,11 @@
   .list-item-label {
     width: 100%;
     display: flex;
-    align-items: stretch;
+    align-items: center;
+    justify-content: stretch;
+    [type="checkbox"]+span:not(.lever):before, [type="checkbox"]:not(.filled-in)+span:not(.lever):after{
+      top:2px;
+    }
   }
 
   .list-item-edit {
