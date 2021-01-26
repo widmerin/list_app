@@ -1,11 +1,13 @@
 <template>
   <div class="list-item">
       <div class="list-item-label">
+                  <div><input type="checkbox"  v-model="completed" @change="doneEdit" /></div>
+
         <label>
-          <input type="checkbox"  v-model="completed" @change="doneEdit" /><span></span>
         </label>
-          <span v-if="!editing" @dblclick="editTodo" :class="{ completed : completed }">{{ title }}</span>
-          <input v-else class="list-item-edit" type="text" v-model="title" @blur="doneEdit" @keyup.enter="doneEdit" @keyup.esc="cancelEdit" v-focus>
+            <div>Checkbox: <input type="checkbox" /></div>
+  <!--        <span v-if="!editing" @dblclick="editTodo" :class="{ completed : completed }">{{ title }}</span>-->
+         <!-- <input v-else class="list-item-edit" type="text" v-model="title" @blur="doneEdit" @keyup.enter="doneEdit" @keyup.esc="cancelEdit" v-focus>-->
       </div>
       <div class="remove-item" @click="removeTodo">&times;</div>
 
@@ -99,7 +101,11 @@
     cursor: pointer;
     flex-direction: flex-end;
   }
-
+  [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+    position: relative;
+    opacity: 1;
+    pointer-events: inherit;
+  }
 }
   .tasks-active {
     .list-item {
