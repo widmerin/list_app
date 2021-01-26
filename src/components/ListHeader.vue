@@ -9,13 +9,10 @@
   </nav>
   <div class="input-field list-header-add">
     <span class="list-header-add-icon">+</span>
-    <input type="text" placeholder="Add to List ..." class="list-header-add-input" v-model="newTodo" @keyup.enter="addTodo"/>
+    <input type="text" placeholder="Add to List ..." class="list-header-add-input" v-model="newTask" @keyup.enter="addTask"/>
   </div>
 
   </div>
-  <!--<div class="list-header">
-    <input type="text" class="list-header-input" placeholder="What do you need?" v-model="newTodo" @keyup.enter="addTodo"/>
-  </div>-->
 </template>
 
 <script>
@@ -29,16 +26,16 @@
     },
     data() {
       return {
-        newTodo: '',
+        newTask: '',
       }
     },
     methods: {
-      addTodo() {
-        if (this.newTodo.trim().length == 0) {
+      addTask() {
+        if (this.newTask.trim().length == 0) {
           return
         }
-        this.$emit('addedTodo', this.newTodo)
-        this.newTodo = ''
+        this.$emit('addedTask', this.newTask)
+        this.newTask = ''
       },
       selectList(id) {
         this.$emit('selectedList', id)

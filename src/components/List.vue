@@ -1,17 +1,17 @@
 <template>
   <div class="list">
-    <list-header @addedTodo="addTodo" :lists="lists" @selectedList="selectList"></list-header>
+    <list-header @addedTask="addTask" :lists="lists" @selectedList="selectList"></list-header>
     <div class="list-content">
       <div class="tasks-active">
         <draggable v-model="tasksFilteredActive">
           <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-            <list-item v-for="(todo, index) in tasksFilteredActive" :key="componentListItem + todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item>
+            <list-item v-for="(task, index) in tasksFilteredActive" :key="componentListItem + task.id" :task="task" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item>
           </transition-group>
         </draggable>
       </div>
       <div class="tasks-completed" v-if="tasksFilteredCompleted && tasksFilteredCompleted.length">
         <p class="tasks-title">Completed Tasks</p>
-        <list-item  v-for="(todo, index) in tasksFilteredCompleted" :key="componentListItem + todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item >
+        <list-item  v-for="(task, index) in tasksFilteredCompleted" :key="componentListItem + task.id" :task="task" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item >
       </div>
     </div>
   </div>
@@ -32,8 +32,8 @@ export default {
   data() {
     return {
       componentListItem: 0,
-      newTodo: '',
-      idForTodo: 4,
+      newTask: '',
+      idForTask: 4,
       currentListId: '0',
       beforeEditCache: '',
       lists: [
@@ -103,16 +103,16 @@ export default {
   computed: {
     tasksFilteredActive:{
       get() {
-        return this.lists[this.currentListId].tasks.filter(todo => !todo.completed)
+        return this.lists[this.currentListId].tasks.filter(task => !task.completed)
       },
       set(tasks) {
         // add completed tasks to active list and save list.
-        tasks = tasks.concat((this.lists[this.currentListId].tasks.filter(todo => todo.completed)))
+        tasks = tasks.concat((this.lists[this.currentListId].tasks.filter(task => task.completed)))
         this.lists[this.currentListId].tasks = tasks
       }
     },
     tasksFilteredCompleted() {
-      return this.lists[this.currentListId].tasks.filter(todo => todo.completed)
+      return this.lists[this.currentListId].tasks.filter(task => task.completed)
     }
   },
   methods: {
@@ -125,36 +125,36 @@ export default {
         this.forceRerender()
       }
     },
-    addTodo(title) {
+    addTask(title) {
       // Todo: implement unique id
-      this.idForTodo = Date.now();
+      this.idForTask = Date.now();
       this.lists[this.currentListId].tasks.push({
-        id: this.idForTodo,
+        id: this.idForTask,
         title: title,
         completed: false,
       })
-      this.newTodo = ''
-      this.idForTodo++
+      this.newTask = ''
+      this.idForTask++
     },
-    cancelEdit(todo) {
-      todo.editing = false
-      todo.title = this.beforeEditCache
+    cancelEdit(task) {
+      task.editing = false
+      task.title = this.beforeEditCache
     },
-    doneEdit(todo) {
-      if (todo.title.trim() == '') {
-        todo.title = this.beforeEditCache
+    doneEdit(task) {
+      if (task.title.trim() == '') {
+        task.title = this.beforeEditCache
       }
-      todo.editing = false
+      task.editing = false
     },
-    removeTodo(id) {
+    removeTask(id) {
       let index = this.lists[this.currentListId].tasks.map(item => item.id).indexOf( id)
       this.lists[this.currentListId].tasks.splice(index, 1)
     },
     finishedEdit(data) {
       // find index of your todo item
-      let index = this.lists[this.currentListId].tasks.map(item => item.id).indexOf( data.todo.id)
+      let index = this.lists[this.currentListId].tasks.map(item => item.id).indexOf( data.task.id)
       // update todo item data
-      this.lists[this.currentListId].tasks.splice(index, 1, data.todo)
+      this.lists[this.currentListId].tasks.splice(index, 1, data.task)
     }
   }
 }
