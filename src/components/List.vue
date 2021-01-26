@@ -3,9 +3,11 @@
     <list-header @addedTodo="addTodo" :lists="lists" @selectedList="selectList"></list-header>
     <div class="list-content">
       <div class="tasks-active">
-        <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-          <list-item v-for="(todo, index) in tasksFilteredActive" :key="componentListItem + todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item>
-        </transition-group>
+        <draggable v-model="tasksFilteredActive">
+          <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
+            <list-item v-for="(todo, index) in tasksFilteredActive" :key="componentListItem + todo.id" :todo="todo" :index="index" @removedTodo="removeTodo" @finishedEdit="finishedEdit"></list-item>
+          </transition-group>
+        </draggable>
       </div>
       <div class="tasks-completed" v-if="tasksFilteredCompleted && tasksFilteredCompleted.length">
         <p class="tasks-title">Completed Tasks</p>
@@ -18,11 +20,13 @@
 <script>
 import ListItem from '~/components/ListItem.vue'
 import ListHeader from './ListHeader.vue'
+import draggable from 'vuedraggable'
 
 export default {
   components: {
     ListItem,
-    ListHeader
+    ListHeader,
+    draggable,
   },
   name: 'List',
   data() {
@@ -97,8 +101,15 @@ export default {
     }
   },
   computed: {
-    tasksFilteredActive() {
-      return this.lists[this.currentListId].tasks.filter(todo => !todo.completed)
+    tasksFilteredActive:{
+      get() {
+        return this.lists[this.currentListId].tasks.filter(todo => !todo.completed)
+      },
+      set(tasks) {
+        // add completed tasks to active list and save list.
+        tasks = t.concat((this.lists[this.currentListId].tasks.filter(todo => todo.completed)))
+        this.lists[this.currentListId].tasks = tasks
+      }
     },
     tasksFilteredCompleted() {
       return this.lists[this.currentListId].tasks.filter(todo => todo.completed)
@@ -113,6 +124,8 @@ export default {
       this.forceRerender()
     },
     addTodo(title) {
+      // Todo: implement unique id
+      this.idForTodo = Date.now();
       this.lists[this.currentListId].tasks.push({
         id: this.idForTodo,
         title: title,
