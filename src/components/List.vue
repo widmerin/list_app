@@ -107,7 +107,7 @@ export default {
       },
       set(tasks) {
         // add completed tasks to active list and save list.
-        tasks = t.concat((this.lists[this.currentListId].tasks.filter(todo => todo.completed)))
+        tasks = tasks.concat((this.lists[this.currentListId].tasks.filter(todo => todo.completed)))
         this.lists[this.currentListId].tasks = tasks
       }
     },
