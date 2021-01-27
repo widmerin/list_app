@@ -15,6 +15,7 @@
     <div class="list-header-action-filter">
       <p class="tasks-title">Current List</p>
       <div class="list-header-action-filter-dropdown">
+        <div class="list-header-action-filter-dropdown-category" v-if="selectedCategory" @click="removeCategory">{{ selectedCategory }}<span>x</span></div>
         <i class="material-icons list-header-action-filter-dropdown-icon" @click="showCategoryDropdown=!showCategoryDropdown">filter_list</i>
         <ul class="list-header-action-filter-dropdown-content" v-if="showCategoryDropdown">
           <li v-for="(category, index)  in categories" :key="index"><a href="#" class="active" @click="selectCategory(index)">{{ category.name }}</a></li>
@@ -42,6 +43,7 @@
       return {
         newTask: '',
         showCategoryDropdown: false,
+        selectedCategory: '',
       }
     },
     methods: {
@@ -57,7 +59,14 @@
       },
       selectCategory(id) {
         this.showCategoryDropdown = false
-        console.log(id)
+        this.selectedCategory = this.getCategoryName(id)
+        this.$emit('selectedCategory', id)
+      },
+      getCategoryName(id) {
+        return this.categories[id].name
+      },
+      removeCategory() {
+        this.selectedCategory = ''
       },
       close (e) {
           if (!this.$el.contains(e.target)) {
@@ -115,21 +124,38 @@ nav {
     }
     &-dropdown {
       position: relative;
+      color: #fff;
+      font-size: 14px;
+      display: flex;
       &-icon {
-        color: #fff;
         margin-left: 15px;
         margin-right: 15px;
         cursor: pointer;
       }
+      &-category {
+        text-transform: uppercase;
+        background: #312c51;
+        border-radius: 5px;
+        padding: 0 10px;
+        line-height: 24px;
+        cursor: pointer;
+        span {
+          font-size: 10px;
+          padding-left: 5px;
+          vertical-align: bottom;
+        }
+      }
       &-content {
-        min-width: 150px;
+        min-width: 130px;
         position: absolute;
         top: 10px;
-        right: 10px;
+        right: 0;
+        border: 1px solid #9e9e9e;
+        border-radius: 5px;
         background-color: #312c51;
         li {
           padding: 10px;
-          border-bottom: 1px solid #fff;
+          border-bottom: 1px solid #9e9e9e;
           a {
             color: #fff;
             display: block;

@@ -1,11 +1,11 @@
 <template>
   <div class="list">
-    <list-header @addedTask="addTask" :lists="lists" :categories="categories" @selectedList="selectList"></list-header>
+    <list-header @addedTask="addTask" :lists="lists" :categories="categories" @selectedList="selectList" @selectedCategory="selectCategory"></list-header>
     <div class="list-content">
       <div class="tasks-active">
         <draggable v-model="tasksFilteredActive">
           <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-            <list-item v-for="(task, index) in tasksFilteredActive" :key="componentListItem + task.id" :task="task" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item>
+            <list-item v-for="(task, index) in tasksFilteredActive" :key="componentListItem + task.id" :task="task" :filterCategoryBy="filterCategoryBy" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item>
           </transition-group>
         </draggable>
       </div>
@@ -34,6 +34,7 @@ export default {
       componentListItem: 0,
       newTask: '',
       idForTask: 4,
+      filterCategoryBy: 0,
       currentListId: '0',
       beforeEditCache: '',
       lists: [
@@ -46,21 +47,21 @@ export default {
                 'title': 'Zitrone',
                 'completed': false,
                 'editing': false,
-                'category': 1
+                'category': 11
               },
               {
                 'id': 2,
                 'title': 'Tofu',
                 'completed': false,
                 'editing': false,
-                'category': 2
+                'category': 12
               },
               {
                 'id': 3,
                 'title': 'Mehl',
                 'completed': true,
                 'editing': false,
-                'category': 1
+                'category': 11
               }
             ],
           },
@@ -91,29 +92,29 @@ export default {
                 'title': 'Curry',
                 'completed': false,
                 'editing': false,
-                'category': 1
+                'category': 11
               },
               {
                 'id': 22,
                 'title': 'Pizza',
                 'completed': false,
                 'editing': false,
-                'category': 3
+                'category': 13
             }
           ],
         }
       ],
       categories: [
         {
-          'id': 1,
+          'id': 11,
           'name': 'Bioladen',
         },
         {
-          'id': 2,
+          'id': 12,
           'name': 'Coop',
         },
         {
-          'id': 3,
+          'id': 13,
           'name': 'Migros',
         }
       ],
@@ -143,6 +144,17 @@ export default {
         this.currentListId = id
         this.forceRerender()
       }
+    },
+    selectCategory(id) {
+      if (id) {
+        this.filterCategoryBy = this.categories[id].id
+      }
+      else {
+        this.filterCategoryBy = 0
+      }
+      this.forceRerender()
+
+     // this.forceRerender()
     },
     addTask(title) {
       // Todo: implement unique id

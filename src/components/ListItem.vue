@@ -1,5 +1,5 @@
 <template>
-  <div class="list-item">
+  <div class="list-item" v-if="filterCategory === 0 || filterCategory == category" >
       <div class="list-item-label">
         <label>
           <input type="checkbox"  v-model="completed" @change="doneEdit"  @click=" element.fixed=! element.fixed" /><span></span>
@@ -24,6 +24,10 @@
       index: {
         type: Number,
         required: true,
+      },
+      filterCategoryBy: {
+        type: Number,
+        required: true,
       }
     },
     data() {
@@ -34,6 +38,7 @@
         'editing': this.task.editing,
         'category': this.task.category,
         'beforeEditCache': '',
+        'filterCategory': 12
       }
     },
     directives: {
