@@ -1,6 +1,6 @@
 <template>
   <div class="list">
-    <list-header @addedTask="addTask" :lists="lists" @selectedList="selectList"></list-header>
+    <list-header @addedTask="addTask" :lists="lists" :categories="categories" @selectedList="selectList"></list-header>
     <div class="list-content">
       <div class="tasks-active">
         <draggable v-model="tasksFilteredActive">
@@ -46,18 +46,21 @@ export default {
                 'title': 'Zitrone',
                 'completed': false,
                 'editing': false,
+                'category': 1
               },
               {
                 'id': 2,
                 'title': 'Tofu',
                 'completed': false,
                 'editing': false,
+                'category': 2
               },
               {
                 'id': 3,
                 'title': 'Mehl',
                 'completed': true,
                 'editing': false,
+                'category': 1
               }
             ],
           },
@@ -88,16 +91,32 @@ export default {
                 'title': 'Curry',
                 'completed': false,
                 'editing': false,
+                'category': 1
               },
               {
                 'id': 22,
                 'title': 'Pizza',
                 'completed': false,
                 'editing': false,
+                'category': 3
             }
           ],
         }
-      ]
+      ],
+      categories: [
+        {
+          'id': 1,
+          'name': 'Bioladen',
+        },
+        {
+          'id': 2,
+          'name': 'Coop',
+        },
+        {
+          'id': 3,
+          'name': 'Migros',
+        }
+      ],
     }
   },
   computed: {
@@ -166,12 +185,9 @@ export default {
   .completed {
     text-decoration: line-through;
   }
+  .tasks-active,
   .tasks-completed {
-    padding-top: 20px;
-    .tasks-title {
-      color: #fff;
-      text-transform: uppercase;
-    }
+    padding-bottom: 15px;
   }
   .extra-container {
     display: flex;
@@ -191,6 +207,10 @@ export default {
     &:focus {
       outline: none;
     }
+  }
+  .tasks-title {
+    color: #fff;
+    text-transform: uppercase;
   }
 }
 

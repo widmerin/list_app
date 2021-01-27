@@ -5,6 +5,13 @@ body {
   line-height: 1.5;
 }
 
+a {
+  color: #FFF;
+  &:hover {
+    opacity: 0.5;
+  }
+}
+
 .layout {
   max-width: 760px;
   margin: 0 auto;
@@ -22,4 +29,10 @@ body {
 
 .nav__link {
   margin-left: 20px;
+}
+
+.tasks-title {
+  color: #fff;
+  text-transform: uppercase;
+  margin: 5px 0;
 }

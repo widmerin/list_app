@@ -4,7 +4,7 @@
         <label>
           <input type="checkbox"  v-model="completed" @change="doneEdit"  @click=" element.fixed=! element.fixed" /><span></span>
         </label>
-          <span v-if="!editing" @dblclick="editTask" :class="{ completed : completed }">{{ title }}</span>
+          <span v-if="!editing" @dblclick="editTask" :class="{ completed : completed }">{{ title }} {{category}}</span>
           <input v-else class="list-item-edit" type="text" v-model="title" @blur="doneEdit" @keyup.enter="doneEdit" @keyup.esc="cancelEdit" v-focus>
       </div>
       <div class="remove-item" @click="removeTask">&times;</div>
@@ -32,6 +32,7 @@
         'title': this.task.title,
         'completed': this.task.completed,
         'editing': this.task.editing,
+        'category': this.task.category,
         'beforeEditCache': '',
       }
     },
