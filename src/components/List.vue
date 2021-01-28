@@ -1,15 +1,15 @@
 <template>
   <div class="list">
-    <list-header @addedTask="addTask" :lists="lists" :categories="categories" @selectedList="selectList" @selectedCategory="selectCategory"></list-header>
+    <list-header @addedTask="addTask" :lists="lists" :categories="categories" :currentListId="currentListId" @selectedList="selectList" @selectedCategory="selectCategory"></list-header>
     <div class="list-content">
-      <div class="tasks-active">
+      <div class="list-content-tasks-active">
         <draggable v-model="tasksFilteredActive">
           <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
             <list-item v-for="(task, index) in tasksFilteredActive" :key="componentListItem + task.id" :task="task" :categories="categories" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item>
           </transition-group>
         </draggable>
       </div>
-      <div class="tasks-completed" v-if="tasksFilteredCompleted && tasksFilteredCompleted.length">
+      <div class="list-content-tasks-completed" v-if="tasksFilteredCompleted && tasksFilteredCompleted.length">
         <p class="tasks-title">Completed Tasks</p>
         <list-item  v-for="(task, index) in tasksFilteredCompleted" :key="componentListItem + task.id" :task="task" :categories="categories" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item >
       </div>
@@ -35,7 +35,7 @@ export default {
       newTask: '',
       idForTask: 4,
       currentCategory: 0,
-      currentListId: '0',
+      currentListId: 0,
       beforeEditCache: '',
       lists: [
           {
@@ -222,37 +222,13 @@ export default {
 <style lang='scss'>
 .list-content {
   padding: 0 15px 15px;
-  .completed {
+  &-tasks-completed {
     text-decoration: line-through;
   }
-  .tasks-active,
-  .tasks-completed {
+  &-tasks-active,
+  &-tasks-completed {
     padding-bottom: 15px;
   }
-  .extra-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-top: 1px solid lightgrey;
-    padding-top: 14px;
-    margin-bottom: 14px;
-  }
-  button {
-    font-size: 14px;
-    background-color: white;
-    appearance: none;
-    &:hover {
-      background: lightgreen;
-    }
-    &:focus {
-      outline: none;
-    }
-  }
-  .tasks-title {
-    color: #fff;
-    text-transform: uppercase;
-  }
 }
-
 
 </style>

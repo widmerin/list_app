@@ -3,7 +3,7 @@
   <nav class="nav-extended">
     <div class="nav-content">
       <ul class="tabs tabs-transparent">
-        <li class="tab" v-for="(list, index)  in lists" :key="index"><a href="#" class="active" @click="selectList(index)">{{ list.name }}</a></li>
+        <li class="tab" v-for="(list, index)  in lists" :key="index"><a href="#" v-bind:class="{ active: index ==  currentListId}" @click="selectList(index)">{{ list.name }}</a></li>
       </ul>
     </div>
   </nav>
@@ -36,6 +36,10 @@
       },
       categories: {
         type: Array,
+        required: true,
+      },
+      currentListId: {
+        type: Number,
         required: true,
       }
     },
@@ -86,11 +90,15 @@
 <style lang='scss'>
 nav {
   background-color: #312c51;
-  .brand-logo {
-    img {
-      max-width: 25px;
+  .nav-content {
+    .tabs {
+      .tab {
+      a.active {
+          background-color: rgba(246,178,181,0.2);
+          outline: none;
+        }
+      }
     }
-
   }
 }
 .list-header-action {
@@ -105,12 +113,14 @@ nav {
     margin-bottom: 0;
     width: 100%;
     margin-bottom: 15px;
+
     &-input {
       color: #fff;
       border: none !important;
       margin: 0 !important;
       padding: 0 !important;
     }
+
     &-icon {
       min-width: 37px;
       font-size: 1.7em;
@@ -123,6 +133,7 @@ nav {
     .tasks-title {
       width: 100%;
     }
+
     &-dropdown {
       position: relative;
       color: #fff;
@@ -133,6 +144,7 @@ nav {
         margin-right: 15px;
         cursor: pointer;
       }
+
       &-category {
         text-transform: uppercase;
         background: #312c51;
@@ -146,6 +158,7 @@ nav {
           vertical-align: bottom;
         }
       }
+
       &-content {
         min-width: 130px;
         position: absolute;
