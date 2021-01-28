@@ -5,13 +5,13 @@
       <div class="tasks-active">
         <draggable v-model="tasksFilteredActive">
           <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-            <list-item v-for="(task, index) in tasksFilteredActive" :key="componentListItem + task.id" :task="task" :filterCategoryBy="filterCategoryBy" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item>
+            <list-item v-for="(task, index) in tasksFilteredActive" :key="componentListItem + task.id" :task="task" :categories="categories" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item>
           </transition-group>
         </draggable>
       </div>
       <div class="tasks-completed" v-if="tasksFilteredCompleted && tasksFilteredCompleted.length">
         <p class="tasks-title">Completed Tasks</p>
-        <list-item  v-for="(task, index) in tasksFilteredCompleted" :key="componentListItem + task.id" :task="task" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item >
+        <list-item  v-for="(task, index) in tasksFilteredCompleted" :key="componentListItem + task.id" :task="task" :categories="categories" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item >
       </div>
     </div>
   </div>
@@ -34,7 +34,7 @@ export default {
       componentListItem: 0,
       newTask: '',
       idForTask: 4,
-      filterCategoryBy: 0,
+      currentCategory: 0,
       currentListId: '0',
       beforeEditCache: '',
       lists: [
@@ -62,6 +62,20 @@ export default {
                 'completed': true,
                 'editing': false,
                 'category': 11
+              },
+                            {
+                'id': 4,
+                'title': 'Hafermilch',
+                'completed': false,
+                'editing': false,
+                'category': 13
+              },
+                {
+                'id': 5,
+                'title': 'Kaffe',
+                'completed': false,
+                'editing': false,
+                'category': 12
               }
             ],
           },
@@ -74,12 +88,14 @@ export default {
                 'title': 'Lampe',
                 'completed': false,
                 'editing': false,
+                'category': 12
               },
               {
                 'id': 12,
                 'title': 'Vorhänge',
                 'completed': false,
                 'editing': false,
+                'category': 13
               }
             ],
           },
@@ -123,7 +139,7 @@ export default {
   computed: {
     tasksFilteredActive:{
       get() {
-        return this.lists[this.currentListId].tasks.filter(task => !task.completed)
+        return this.filterTasksActive(this.filterTasksByCategory(this.lists[this.currentListId].tasks))
       },
       set(tasks) {
         // add completed tasks to active list and save list.
@@ -132,10 +148,22 @@ export default {
       }
     },
     tasksFilteredCompleted() {
-      return this.lists[this.currentListId].tasks.filter(task => task.completed)
+        return this.filterTasksCompleted(this.lists[this.currentListId].tasks)
     }
   },
   methods: {
+    filterTasksByCategory: function(tasks){
+      if(this.currentCategory > 0) {
+        return tasks.filter(task => task.category == this.currentCategory)
+      }
+        return tasks
+    },
+    filterTasksActive: function(tasks){
+        return tasks.filter(task => !task.completed)
+    },
+    filterTasksCompleted: function(tasks){
+        return tasks.filter(task => task.completed)
+    },
     forceRerender() {
       this.componentListItem += 1;
     },
@@ -146,11 +174,11 @@ export default {
       }
     },
     selectCategory(id) {
-      if (id) {
-        this.filterCategoryBy = this.categories[id].id
+      if (id > 0) {
+        this.currentCategory = id
       }
       else {
-        this.filterCategoryBy = 0
+        this.currentCategory = 0
       }
       this.forceRerender()
 
@@ -183,7 +211,7 @@ export default {
     },
     finishedEdit(data) {
       // find index of your todo item
-      let index = this.lists[this.currentListId].tasks.map(item => item.id).indexOf( data.task.id)
+      let index = this.lists[this.currentListId].tasks.map(item => item.id).indexOf(data.task.id)
       // update todo item data
       this.lists[this.currentListId].tasks.splice(index, 1, data.task)
     }

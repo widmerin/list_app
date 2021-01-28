@@ -60,13 +60,14 @@
       selectCategory(id) {
         this.showCategoryDropdown = false
         this.selectedCategory = this.getCategoryName(id)
-        this.$emit('selectedCategory', id)
+        this.$emit('selectedCategory', this.categories[id].id)
       },
       getCategoryName(id) {
         return this.categories[id].name
       },
       removeCategory() {
         this.selectedCategory = ''
+        this.$emit('selectedCategory', '')
       },
       close (e) {
           if (!this.$el.contains(e.target)) {

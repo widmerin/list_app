@@ -1,13 +1,16 @@
 <template>
-  <div class="list-item" v-if="filterCategory === 0 || filterCategory == category" >
+<!--v-if="filterCategory === 0 || filterCategory == category" -->
+  <div class="list-item" >
       <div class="list-item-label">
         <label>
-          <input type="checkbox"  v-model="completed" @change="doneEdit"  @click=" element.fixed=! element.fixed" /><span></span>
+          <input type="checkbox"  v-model="completed" @change="doneEdit"  /><span></span>
         </label>
-          <span v-if="!editing" @dblclick="editTask" :class="{ completed : completed }">{{ title }} {{category}}</span>
+          <span v-if="!editing" @dblclick="editTask" :class="{ completed : completed }">{{ task.title }} </span>
           <input v-else class="list-item-edit" type="text" v-model="title" @blur="doneEdit" @keyup.enter="doneEdit" @keyup.esc="cancelEdit" v-focus>
+
       </div>
-      <div class="remove-item" @click="removeTask">&times;</div>
+      <div class="list-item-category" v-if="!completed">{{ getCategoryName(task.category) }}</div>
+      <div class="list-item-remove" @click="removeTask">&times;</div>
 
 
   </div>
@@ -25,9 +28,8 @@
         type: Number,
         required: true,
       },
-      filterCategoryBy: {
-        type: Number,
-        required: true,
+      categories: {
+        type: Array
       }
     },
     data() {
@@ -37,8 +39,7 @@
         'completed': this.task.completed,
         'editing': this.task.editing,
         'category': this.task.category,
-        'beforeEditCache': '',
-        'filterCategory': 12
+        'beforeEditCache': ''
       }
     },
     directives: {
@@ -71,6 +72,11 @@
         this.beforeEditCache = this.title
         this.editing = true
       },
+      getCategoryName(id) {
+      if(id > 0) {
+        return this.categories[this.categories.map(item => item.id).indexOf(id)].name
+      }
+    },
       removeTask() {
         this.$emit('removedTask', this.id)
       }
@@ -91,19 +97,23 @@
   background-color: #fff;
   color: #48426d;
 
-  .list-item-label {
+  &-label {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: stretch;
   }
 
-  .list-item-edit {
+  &-edit {
     height: 2em;
   }
-  .remove-item {
+  &-category {
+    text-transform: uppercase;
+    font-size: 12px;
+    padding: 0 5px;
+  }
+  &-remove {
     cursor: pointer;
-    flex-direction: flex-end;
   }
 
 }
