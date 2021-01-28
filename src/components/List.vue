@@ -1,6 +1,6 @@
 <template>
   <div class="list">
-    <list-header @addedTask="addTask" :lists="lists" :categories="categories" :currentListId="currentListId" @selectedList="selectList" @selectedCategory="selectCategory"></list-header>
+    <list-header :lists="lists" :categories="categories" :currentListId="currentListId" @selectedList="selectList" @selectedCategory="selectCategory"></list-header>
     <div class="list-content">
       <div class="list-content-tasks-active">
         <draggable v-model="tasksFilteredActive">
@@ -14,22 +14,21 @@
         <list-item  v-for="(task, index) in tasksFilteredCompleted" :key="componentListItem + task.id" :task="task" :categories="categories" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item >
       </div>
     </div>
-        <div class="input-field list-header-action-add">
-      <span class="list-header-action-add-icon">+</span>
-      <input type="text" placeholder="Add to List ..." class="list-header-action-add-input" v-model="newTask" @keyup.enter="addTask"/>
-    </div>
+    <list-footer @addedTask="addTask" :categories="categories"></list-footer>
   </div>
 </template>
 
 <script>
-import ListItem from '~/components/ListItem.vue'
+import ListItem from './ListItem.vue'
 import ListHeader from './ListHeader.vue'
+import ListFooter from './ListFooter.vue'
 import draggable from 'vuedraggable'
 
 export default {
   components: {
     ListItem,
     ListHeader,
+    ListFooter,
     draggable,
   },
   name: 'List',
@@ -105,21 +104,19 @@ export default {
           },
           {
             listId: '13',
-            name: 'Essensideen',
+            name: 'Features',
             tasks: [
               {
                 'id': 21,
-                'title': 'Curry',
+                'title': 'Sortieren',
                 'completed': false,
-                'editing': false,
-                'category': 11
+                'editing': false
               },
               {
                 'id': 22,
-                'title': 'Pizza',
+                'title': 'Daten Speichern',
                 'completed': false,
-                'editing': false,
-                'category': 13
+                'editing': false
             }
           ],
         }
@@ -188,16 +185,15 @@ export default {
 
      // this.forceRerender()
     },
-    addTask(title) {
+    addTask(title, category) {
       // Todo: implement unique id
       this.idForTask = Date.now();
       this.lists[this.currentListId].tasks.push({
         id: this.idForTask,
         title: title,
+        category: category,
         completed: false,
       })
-      this.newTask = ''
-      this.idForTask++
     },
     cancelEdit(task) {
       task.editing = false

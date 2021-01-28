@@ -1,0 +1,98 @@
+<template>
+
+<div class="list-footer">
+  <!-- overlay -->
+  <div class="list-footer-overlay" v-if="showModal" @click="showModal = false"></div>
+
+  <!-- modal -->
+  <div class="list-footer-modal" v-if="showModal">
+    <button class="list-footer-modal-close" @click="showModal = false">x</button>
+
+    <h5>Create new Task</h5>
+    <input type="text" placeholder="Add to List ..." class="list-footer-modal-task" v-model="newTask">
+    <select class="list-footer-modal-category" v-model="newCategory">
+      <option selected value="">Category</option>
+      <option v-for="category in categories" v-bind:value="category.id" :key="category">
+        {{ category.name }}
+      </option>
+    </select>
+    <button class="waves-effect waves-light btn" @click="addTask">Add Task</button>
+  </div>
+  <a class="waves-effect waves-light btn list-footer-add-btn" @click="showModal = true"><span class="list-footer-add-add-icon material-icons">+</span> Add Task</a>
+</div>
+</template>
+
+<script>
+  export default {
+    name: 'list-footer',
+    props: {
+      categories: {
+        type: Array,
+        required: true,
+      },
+    },
+    data() {
+      return {
+        newTask: '',
+        newCategory: '',
+        showModal: false
+      }
+    },
+    methods: {
+      addTask() {
+        if (this.newTask.trim().length == 0) {
+          return
+        }
+        this.$emit('addedTask', this.newTask, this.newCategory)
+        this.newTask = ''
+        this.newCategory = ''
+        this.showModal = false;
+      },
+    }
+  }
+</script>
+
+<style lang='scss'>
+.list-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &-add-add-icon {
+    padding-right: 5px;
+  }
+
+  &-overlay {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+  }
+
+  &-modal {
+    position:absolute;
+    top: 50px;
+    width: 300px;
+    min-height: 250px;
+    z-index: 9999;
+    margin: 0 auto;
+    padding: 20px 30px;
+    background-color: #fff;
+    &-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 5px 10px;
+      background: none;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    &-category {
+      display: inline-block;
+    }
+  }
+}
+</style>

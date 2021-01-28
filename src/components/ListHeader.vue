@@ -95,7 +95,8 @@ nav {
   }
 }
 .list-header {
-  margin: 0 15px 15px;
+  margin-bottom: 15px;
+  padding: 0 15px;
   background-color: #312c51;
   height: auto;
   display: flex;
