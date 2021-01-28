@@ -14,6 +14,10 @@
         <list-item  v-for="(task, index) in tasksFilteredCompleted" :key="componentListItem + task.id" :task="task" :categories="categories" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item >
       </div>
     </div>
+        <div class="input-field list-header-action-add">
+      <span class="list-header-action-add-icon">+</span>
+      <input type="text" placeholder="Add to List ..." class="list-header-action-add-input" v-model="newTask" @keyup.enter="addTask"/>
+    </div>
   </div>
 </template>
 
@@ -222,7 +226,7 @@ export default {
 <style lang='scss'>
 .list-content {
   padding: 0 15px 15px;
-  &-tasks-completed {
+  .completed {
     text-decoration: line-through;
   }
   &-tasks-active,
