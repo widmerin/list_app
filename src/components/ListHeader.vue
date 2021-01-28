@@ -1,4 +1,5 @@
 <template>
+<header>
   <div class="list-header">
     <nav class="list-header-nav-extended nav-extended">
       <div class="list-header-nav-content nav-content">
@@ -7,16 +8,19 @@
         </ul>
       </div>
     </nav>
+  </div>
     <div class="list-header-nav-filter">
+      <div class="list-header-selected-category">
+        <span class="list-header-selected-category-label" v-if="selectedCategory" @click="removeCategory">{{ selectedCategory }} <span class="list-header-selected-category-remove">x</span></span>
+      </div>
       <div class="list-header-nav-filter-dropdown">
-        <div class="list-header-nav-filter-dropdown-category" v-if="selectedCategory" @click="removeCategory">{{ selectedCategory }}<span>x</span></div>
         <i class="material-icons list-header-nav-filter-dropdown-icon" @click="showCategoryDropdown=!showCategoryDropdown">filter_list</i>
         <ul class="list-header-nav-filter-dropdown-content" v-if="showCategoryDropdown">
           <li v-for="(category, index)  in categories" :key="index"><a href="#" class="active" @click="selectCategory(index)">{{ category.name }}</a></li>
         </ul>
       </div>
     </div>
-  </div>
+  </header>
 </template>
 
 <script>
@@ -94,8 +98,10 @@ nav {
     }
   }
 }
+header {
+  margin-bottom: 10px;
+}
 .list-header {
-  margin-bottom: 15px;
   padding: 0 15px;
   background-color: #312c51;
   height: auto;
@@ -103,6 +109,7 @@ nav {
   align-items: center;
   justify-content: center;
   color: #fff;
+  margin-bottom: 5px;
   &-nav {
     &-extended {
       box-shadow: none;
@@ -121,31 +128,16 @@ nav {
         font-size: 14px;
         display: flex;
         &-icon {
-          margin-left: 15px;
           margin-right: 15px;
           cursor: pointer;
-        }
-
-        &-category {
-          text-transform: uppercase;
-          background: #312c51;
-          border-radius: 5px;
-          padding: 0 10px;
-          line-height: 24px;
-          cursor: pointer;
-          span {
-            font-size: 10px;
-            padding-left: 5px;
-            vertical-align: bottom;
-          }
         }
 
         &-content {
           min-width: 130px;
           position: absolute;
-          top: 22px;
-          right: 0;
-          border-top: 2px solid #fff;
+          top: 14px;
+          right: 14px;
+          border-top: 1px solid #fff;
           background-color: #312c51;
           li {
             padding: 10px;
@@ -160,6 +152,30 @@ nav {
       }
     }
   }
+  &-nav-filter {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  &-selected-category {
+    height: 35px;
+
+    color: #fff;
+    cursor: pointer;
+    padding: 5px 15px;
+    &-label{
+      text-transform: uppercase;
+      padding: 5px 10px;
+      line-height: 24px;
+      font-size: 14px;
+      background: #312c51;
+      border-radius: 5px;
+    }
+    &-remove {
+        font-size: 10px;
+        padding-left: 5px;
+      }
+    }
 }
 
 </style>
