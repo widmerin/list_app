@@ -9,14 +9,18 @@
     <button class="list-footer-modal-close" @click="showModal = false">x</button>
 
     <h5>Create new Task</h5>
-    <input type="text" placeholder="Add to List ..." class="list-footer-modal-task" v-model="newTask">
-    <select class="list-footer-modal-category" v-model="newCategory">
-      <option selected value="">Category</option>
-      <option v-for="category in categories" v-bind:value="category.id" :key="category">
-        {{ category.name }}
-      </option>
-    </select>
-    <button class="waves-effect waves-light btn" @click="addTask">Add Task</button>
+    <div class="input-field">
+      <input type="text" placeholder="Add new Task ..." class="list-footer-modal-task" v-model="newTask">
+    </div>
+    <div class="input-field">
+      <select class="list-footer-modal-category" v-model="newCategory">
+        <option disabled selected value="">Category</option>
+        <option v-for="category in categories" v-bind:value="category.id" :key="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+    <div class="list-footer-modal-btn"><button class="waves-effect waves-light btn" @click="addTask">Add Task</button></div>
   </div>
   <a class="waves-effect waves-light btn list-footer-add-btn" @click="showModal = true"><span class="list-footer-add-add-icon material-icons">+</span> Add Task</a>
 </div>
@@ -89,6 +93,10 @@
       border: none;
       font-weight: bold;
       cursor: pointer;
+    }
+    &-btn {
+      display: flex;
+      justify-content: center;
     }
     &-category {
       display: inline-block;
