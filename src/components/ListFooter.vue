@@ -10,7 +10,7 @@
 
     <h5>Create new Task</h5>
     <div class="input-field">
-      <input type="text" placeholder="Add new Task ..." class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask">
+      <input type="text" placeholder="Add new Task ..." class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask" autofocus>
     </div>
     <div class="input-field">
       <select class="list-footer-modal-category" v-model="newCategory">
@@ -103,11 +103,11 @@
     }
   }
   &-add-btn {
-    height: 40px;
+    height: 48px;
     position: fixed;
     bottom:0%;
     width:100%;
-    opacity: 1;
+    padding: 4px;
   }
 }
 </style>
