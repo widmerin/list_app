@@ -9,10 +9,14 @@ exports.handler = (event, context, callback) => {
   const data = JSON.parse(event.body)
   const newCategory = {
     data: {
-      name: "Category XY"
+      name: 'Category XY'
     }
   }
-  return client.query(q.Create(q.Ref("collections/categories"), newCategory))
+  return client.query(q.Create(q.Collection("collections/categories"), {
+    	 	    data : {
+             	name : 'Category für Job'
+    	    }
+  		}))
   .then((response) => {
     console.log("success", response)
     return callback(null, {
