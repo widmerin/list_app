@@ -10,11 +10,13 @@
         </draggable>
       </div>
       <div class="list-content-tasks-completed" v-if="tasksFilteredCompleted && tasksFilteredCompleted.length">
-        <p class="tasks-title">Completed Tasks</p>
-        <list-item  v-for="(task, index) in tasksFilteredCompleted" :key="componentListItem + task.id" :task="task" :categories="categories" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item >
+        <p class="tasks-title">Completed Tasks
+          <i v-if="showCompletedTasks" class="material-icons list-content-tasks-completed-icon" @click="showCompletedTasks=!showCompletedTasks">arrow_drop_up</i>
+          <i v-else class="material-icons list-content-tasks-completed-icon" @click="showCompletedTasks=!showCompletedTasks">arrow_drop_down</i></p>
+          <list-item v-if="showCompletedTasks" v-for="(task, index) in tasksFilteredCompleted" :key="componentListItem + task.id" :task="task" :categories="categories" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item >
       </div>
     </div>
-    <list-footer @addedTask="addTask" :categories="categories"></list-footer>
+    <list-footer @addedTask="addTask" ></list-footer>
   </div>
 </template>
 
@@ -40,6 +42,7 @@ export default {
       currentCategory: 0,
       currentListId: 0,
       beforeEditCache: '',
+      showCompletedTasks: false,
       lists: [
           {
             listId: '11',
@@ -228,6 +231,10 @@ export default {
   &-tasks-active,
   &-tasks-completed {
     padding-bottom: 15px;
+    &-icon {
+      float: right;
+      margin-right: 0;
+    }
   }
 }
 

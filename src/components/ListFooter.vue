@@ -14,7 +14,7 @@
     </div>
     <div class="input-field">
       <select class="list-footer-modal-category" v-model="newCategory">
-        <option disabled selected> value="">Category</option>
+        <option disabled selected value="">Category</option>
         <option v-for="category in categories" v-bind:value="category.id" :key="category">
           {{ category.name }}
         </option>
@@ -101,6 +101,13 @@
     &-category {
       display: inline-block;
     }
+  }
+  &-add-btn {
+    height: 40px;
+    position: fixed;
+    bottom:0%;
+    width:100%;
+    opacity: 1;
   }
 }
 </style>
