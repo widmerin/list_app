@@ -7,6 +7,7 @@
     "explore": "gridsome explore"
   },
   "dependencies": {
+    "faunadb": "^4.0.2",
     "gridsome": "^0.7.0",
     "gridsome-plugin-pwa": "^0.0.18",
     "material-design-icons": "^3.0.1",
