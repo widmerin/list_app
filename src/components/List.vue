@@ -110,20 +110,38 @@ export default {
           },
           {
             listId: '13',
-            name: 'Features',
+            name: 'App',
             tasks: [
               {
                 'id': 21,
-                'title': 'Sortieren',
+                'title': 'Edit Task',
                 'completed': false,
                 'editing': false
               },
               {
                 'id': 22,
-                'title': 'Daten Speichern',
+                'title': 'Complete Task Mobile Bug',
                 'completed': false,
                 'editing': false
-            }
+              },
+              {
+                'id': 23,
+                'title': 'Persist Data',
+                'completed': false,
+                'editing': false
+              },
+              {
+                'id': 24,
+                'title': 'Login',
+                'completed': false,
+                'editing': false
+              },
+              {
+                'id': 25,
+                'title': 'PWA',
+                'completed': false,
+                'editing': false
+              }
           ],
         }
       ],
@@ -237,6 +255,7 @@ export default {
     &-icon {
       float: right;
       margin-right: 0;
+      cursor: pointer;
     }
   }
 }
