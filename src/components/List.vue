@@ -3,20 +3,23 @@
     <list-header :lists="lists" :categories="categories" :currentListId="currentListId" @selectedList="selectList" @selectedCategory="selectCategory"></list-header>
     <div class="list-content">
       <div class="list-content-tasks-active">
-        <draggable v-model="tasksFilteredActive">
+        <draggable v-model="tasksFilteredActive" v-if="!currentCategory">
           <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
             <list-item v-for="(task, index) in tasksFilteredActive" :key="componentListItem + task.id" :task="task" :categories="categories" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item>
           </transition-group>
         </draggable>
+        <transition-group v-else name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
+            <list-item v-for="(task, index) in tasksFilteredActive" :key="componentListItem + task.id" :task="task" :categories="categories" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item>
+          </transition-group>
       </div>
       <div class="list-content-tasks-completed" v-if="tasksFilteredCompleted && tasksFilteredCompleted.length">
         <p class="tasks-title">Completed Tasks
           <i v-if="showCompletedTasks" class="material-icons list-content-tasks-completed-icon" @click="showCompletedTasks=!showCompletedTasks">arrow_drop_up</i>
           <i v-else class="material-icons list-content-tasks-completed-icon" @click="showCompletedTasks=!showCompletedTasks">arrow_drop_down</i></p>
-          <list-item v-if="showCompletedTasks" v-for="(task, index) in tasksFilteredCompleted" :key="componentListItem + task.id" :task="task" :categories="categories" :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item >
+          <list-item v-if="showCompletedTasks" v-for="(task, index) in tasksFilteredCompleted" :key="componentListItem + task.id" :task="task" :categories="categories"  :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item >
       </div>
     </div>
-    <list-footer @addedTask="addTask" ></list-footer>
+    <list-footer @addedTask="addTask" :categories="categories"></list-footer>
   </div>
 </template>
 

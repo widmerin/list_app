@@ -52,7 +52,13 @@
         this.newCategory = ''
         this.showModal = false;
       },
+    },
+    watch:{
+    showModal:function(value){
+     // set the focus when the modal opened/closed
+      this.$refs.inputText1.focus();
     }
+  },
   }
 </script>
 
