@@ -21,10 +21,7 @@ function deleteTask(id){
 }
 
 function updateTask(id, data){
-  axios.put(`/.netlify/functions/update-task/${data.id}`, {
-      title: data.task.title,
-      completed: data.task.completed,
-  })
+  axios.put(`/.netlify/functions/update-task/${id}`, data)
   .catch(function (error) {
       console.log(error);
   })

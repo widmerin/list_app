@@ -25,7 +25,7 @@ import ListHeader from './ListHeader.vue'
 import ListFooter from './ListFooter.vue'
 import draggable from 'vuedraggable'
 import axios from 'axios';
-import { deleteTask, createCategory, getReferenceId, updateTask } from '@/helpers/utils';
+import { deleteTask, getReferenceId, updateTask } from '@/helpers/utils';
 
 
 
@@ -39,7 +39,7 @@ export default {
   name: 'List',
   data() {
     return {
-      debug: true,
+      debug: false,
       componentListItem: 0,
       newTask: '',
       idForTask: 4,
@@ -63,7 +63,6 @@ export default {
     axios
       .get('/.netlify/functions/get-tasks')
       .then(response => (this.tasks = response.data))
-
   },
   computed: {
     tasksFilteredActive:{
@@ -85,7 +84,7 @@ export default {
       if(this.currentCategory != 0) {
         return tasks.filter(task => task.data.category == this.currentCategory)
       }
-        return tasks
+      return tasks
     },
     filterTasksActive: function(tasks){
         return tasks.filter(task => !task.data.completed)
@@ -113,8 +112,6 @@ export default {
         this.currentCategory = 0
       }
       this.forceRerender()
-
-     // this.forceRerender()
     },
     addTask(title, category) {
       const list = this.lists[this.currentListId].ref['@ref'].id
@@ -131,17 +128,6 @@ export default {
           console.log(error);
       })
     },
-
-    cancelEdit(task) {
-      task.editing = false
-      task.title = this.beforeEditCache
-    },
-    doneEdit(task) {
-      if (task.title.trim() == '') {
-        task.title = this.beforeEditCache
-      }
-      task.editing = false
-    },
     removeTask(id) {
       let index = this.tasks.map(item => item.ref['@ref'].id).indexOf(id)
       // Delete Task in DB
@@ -151,11 +137,12 @@ export default {
     finishedEdit(data) {
       let index = this.tasks.map(item => item.ref['@ref'].id).indexOf(data.id)
 
-
       this.tasks[index].data.title = data.task.title
       this.tasks[index].data.completed = data.task.completed
+      this.tasks[index].data.category = data.task.category
+
       // Update Task in DB
-      updateTask(data.id, data)
+      updateTask(data.id, data.task)
     }
   }
 }

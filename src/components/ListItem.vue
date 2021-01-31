@@ -5,11 +5,17 @@
         <label>
           <input type="checkbox"  v-model="completed" @change="doneEdit"  /><span></span>
         </label>
-          <span v-if="!editing" @dblclick="editTask" :class="{ completed : completed }">{{ task.data.title }} </span>
+          <span v-if="!editing" @dblclick="editTask" :class="{ completed : completed }">{{ task.data.title }}</span>
           <input v-else class="list-item-edit" type="text" v-model="title" @blur="doneEdit" @keyup.enter="doneEdit" @keyup.esc="cancelEdit" v-focus>
 
       </div>
-      <div class="list-item-category" v-if="!completed">{{ getCategoryName(task.data.category)}}</div>
+      <div class="list-item-category" @click="editCategory=!editCategory" v-if="!completed && !editCategory" >{{ getCategoryName(task.data.category)}}</div>
+      <select class="list-item-category-select" v-model="category" v-if="editCategory" @change="doneEdit">
+        <option selected value="">-- No Category --</option>
+        <option v-for="(category, index) in categories" v-bind:value="category.ref['@ref'].id" :key="index">
+          {{ category.data.name }}
+        </option>
+      </select>
       <div class="list-item-remove" @click="removeTask">&times;</div>
   </div>
 </template>
@@ -37,7 +43,8 @@
         'completed': this.task.data.completed,
         'editing': this.task.data.editing,
         'category': this.task.data.category,
-        'beforeEditCache': ''
+        'beforeEditCache': '',
+        'editCategory': false
       }
     },
     directives: {
@@ -57,11 +64,13 @@
           this.title = this.beforeEditCache
         }
         this.editing = false
+        this.editCategory = false
         this.$emit('finishedEdit', {
           'task': {
             'title': this.title,
             'completed': this.completed,
             'editing': this.editing,
+            'category': this.category,
           },
           'id': this.id,
         })
@@ -107,11 +116,19 @@
 
   &-edit {
     height: 2em;
+      border-bottom: 2px solid #48426d !important;
+    max-width: 250px;
   }
   &-category {
     text-transform: uppercase;
     font-size: 12px;
     padding: 0 5px;
+
+    &-select {
+      display: inline-block;
+      max-width: 120px;
+      border: 2px solid #48426d;
+    }
   }
   &-remove {
     cursor: pointer;
