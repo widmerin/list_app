@@ -10,7 +10,7 @@ exports.handler = (event, context, callback) => {
   const newCategory = {
     data: data
   }
-  return client.query(q.Create(q.Ref("collections/tasks"), newCategory))
+  return client.query(q.Create(q.Ref("collections/categories"), newCategory))
   .then((response) => {
     console.log("success", response)
     return callback(null, {

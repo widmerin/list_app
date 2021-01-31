@@ -1,74 +1,38 @@
 import axios from 'axios';
-
-function bar() {
-    return 'bar';
+function createTask(title,category,list){
+      axios.post(`/.netlify/functions/create-task`, {
+          title: title,
+          category: category,
+          list: list,
+          completed: false,
+      })
+      .then(response => {
+        return response.data
+      })
+      .catch(function (error) {
+          console.log(error);
+      })
 }
-
-function getCategories() {
-  return axios('/.netlify/functions/get-categories',{
-       headers : {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-       }
-      }).then((response) => {
-    this.cat = response
+function deleteTask(id){
+  axios.delete(`/.netlify/functions/delete-task/${id}`)
+  .catch(function (error) {
+      console.log(error);
   })
 }
 
-function getLists(){
-  return axios('/.netlify/functions/get-lists').then((response) => {
-    return response.json()
+function updateTask(id, data){
+  axios.put(`/.netlify/functions/update-task/${data.id}`, {
+      title: data.task.title,
+      completed: data.task.completed,
+  })
+  .catch(function (error) {
+      console.log(error);
   })
 }
 
-function getTasks(){
-  return axios('/.netlify/functions/get-tasks').then((response) => {
-    return response.json()
-  })
-}
-
-function createCategory(data){
-  return axios('./.netlify/functions/create-category', {
-  headers : {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
-    },
-    body: JSON.stringify(data),
-    method: 'POST'
-  }).then(response => {
-    return response.json()
-  })
-}
-
-
-function updateTask(data){
-  return axios('./.netlify/functions/post-category', {
-  headers : {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
-    },
-    body: JSON.stringify(data),
-    method: 'POST'
-  }).then(response => {
-    return response.json()
-  })
-}
-
-function deleteTask(data){
-  return axios('./.netlify/functions/create-category', {
-  headers : {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
-    },
-    body: JSON.stringify(data),
-    method: 'POST'
-  }).then(response => {
-    return response.json()
-  })
-}
 
 function getReferenceId(element) {
       return element.ref['@ref'].id
     }
 
-export { bar, getCategories, createCategory, getReferenceId };
+export { deleteTask, updateTask, getReferenceId };

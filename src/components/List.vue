@@ -25,7 +25,7 @@ import ListHeader from './ListHeader.vue'
 import ListFooter from './ListFooter.vue'
 import draggable from 'vuedraggable'
 import axios from 'axios';
-import { getCategories, createCategory, getReferenceId } from '@/helpers/utils';
+import { deleteTask, createCategory, getReferenceId, updateTask } from '@/helpers/utils';
 
 
 
@@ -39,6 +39,7 @@ export default {
   name: 'List',
   data() {
     return {
+      debug: true,
       componentListItem: 0,
       newTask: '',
       idForTask: 4,
@@ -62,6 +63,7 @@ export default {
     axios
       .get('/.netlify/functions/get-tasks')
       .then(response => (this.tasks = response.data))
+
   },
   computed: {
     tasksFilteredActive:{
@@ -115,42 +117,21 @@ export default {
      // this.forceRerender()
     },
     addTask(title, category) {
-      // Todo: implement unique id
-      this.idForTask = Date.now();
-
-      axios('./.netlify/functions/create-task', {
-        body: JSON.stringify({
+      const list = this.lists[this.currentListId].ref['@ref'].id
+      axios.post(`/.netlify/functions/create-task`, {
           title: title,
           category: category,
-          list: this.lists[this.currentListId],
+          list: list,
           completed: false,
-        }),
-        method: 'POST'
-      }).then(response => {
-        console.log(response.json())
       })
-   /*   this.lists[this.currentListId].tasks.push({
-        id: this.idForTask,
-        title: title,
-        category: category,
-        completed: false,
-      })*/
-    },
-
-    addCategory() {
-      // Todo data
-      const myTodo = {
-        name: 'My todo title'
-      }
-
-      // create it!
-      createCategory(myTodo).then((response) => {
-        console.log('API response', response)
-        // set app state
-      }).catch((error) => {
-        console.log('API error', error)
+      .then(response => {
+        this.tasks.push(response.data)
+      })
+      .catch(function (error) {
+          console.log(error);
       })
     },
+
     cancelEdit(task) {
       task.editing = false
       task.title = this.beforeEditCache
@@ -163,31 +144,18 @@ export default {
     },
     removeTask(id) {
       let index = this.tasks.map(item => item.ref['@ref'].id).indexOf(id)
-
-      // Delete Task
-      axios.delete(`/.netlify/functions/delete-task/${id}`)
-      .then(function (res) {
-        console.log(res)
-      })
-      .catch(function (error) {
-          console.log(error);
-      })
-     this.tasks.splice(index, 1)
+      // Delete Task in DB
+      deleteTask(id)
+      this.tasks.splice(index, 1)
     },
     finishedEdit(data) {
       let index = this.tasks.map(item => item.ref['@ref'].id).indexOf(data.id)
 
-      // Update Task
+
       this.tasks[index].data.title = data.task.title
       this.tasks[index].data.completed = data.task.completed
-
-      axios.put(`/.netlify/functions/update-task/${data.id}`, {
-          title: data.task.title,
-          completed: data.task.completed,
-      })
-      .catch(function (error) {
-          console.log(error);
-      })
+      // Update Task in DB
+      updateTask(data.id, data)
     }
   }
 }
