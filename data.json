@@ -1,0 +1,122 @@
+{
+  componentListItem: 0,
+  newTask: '',
+  idForTask: 4,
+  currentCategory: 0,
+  currentListId: 0,
+  beforeEditCache: '',
+  showCompletedTasks: false,
+  lists: [
+      {
+        listId: '11',
+        name: 'Einkaufen',
+        tasks: [
+          {
+            'id': 1,
+            'title': 'Zitrone',
+            'completed': false,
+            'editing': false,
+            'category': 11
+          },
+          {
+            'id': 2,
+            'title': 'Tofu',
+            'completed': false,
+            'editing': false,
+            'category': 12
+          },
+          {
+            'id': 3,
+            'title': 'Mehl',
+            'completed': true,
+            'editing': false,
+            'category': 11
+          },
+                        {
+            'id': 4,
+            'title': 'Hafermilch',
+            'completed': false,
+            'editing': false,
+            'category': 13
+          },
+            {
+            'id': 5,
+            'title': 'Kaffe',
+            'completed': false,
+            'editing': false,
+            'category': 12
+          }
+        ],
+      },
+      {
+        listId: '12',
+        name: 'Wohnen',
+        tasks: [
+          {
+            'id': 11,
+            'title': 'Lampe',
+            'completed': false,
+            'editing': false,
+            'category': 12
+          },
+          {
+            'id': 12,
+            'title': 'Vorhänge',
+            'completed': false,
+            'editing': false,
+            'category': 13
+          }
+        ],
+      },
+      {
+        listId: '13',
+        name: 'App',
+        tasks: [
+          {
+            'id': 21,
+            'title': 'Edit Task',
+            'completed': false,
+            'editing': false
+          },
+          {
+            'id': 22,
+            'title': 'Complete Task Mobile Bug',
+            'completed': false,
+            'editing': false
+          },
+          {
+            'id': 23,
+            'title': 'Persist Data',
+            'completed': false,
+            'editing': false
+          },
+          {
+            'id': 24,
+            'title': 'Login',
+            'completed': false,
+            'editing': false
+          },
+          {
+            'id': 25,
+            'title': 'PWA',
+            'completed': false,
+            'editing': false
+          }
+      ],
+    }
+  ],
+  categories: [
+    {
+      'id': 11,
+      'name': 'Bioladen Vue',
+    },
+    {
+      'id': 12,
+      'name': 'Coop Vue',
+    },
+    {
+      'id': 13,
+      'name': 'Migros Vue',
+    }
+  ]
+}
