@@ -5,14 +5,12 @@
         <label>
           <input type="checkbox"  v-model="completed" @change="doneEdit"  /><span></span>
         </label>
-          <span v-if="!editing" @dblclick="editTask" :class="{ completed : completed }">{{ task.title }} </span>
+          <span v-if="!editing" @dblclick="editTask" :class="{ completed : completed }">{{ task.data.title }} </span>
           <input v-else class="list-item-edit" type="text" v-model="title" @blur="doneEdit" @keyup.enter="doneEdit" @keyup.esc="cancelEdit" v-focus>
 
       </div>
-      <div class="list-item-category" v-if="!completed">{{ getCategoryName(task.category)}}</div>
+      <div class="list-item-category" v-if="!completed">{{ getCategoryName(task.data.category)}}</div>
       <div class="list-item-remove" @click="removeTask">&times;</div>
-
-
   </div>
 </template>
 
@@ -34,11 +32,11 @@
     },
     data() {
       return {
-        'id': this.task.id,
-        'title': this.task.title,
-        'completed': this.task.completed,
-        'editing': this.task.editing,
-        'category': this.task.category,
+        'id': this.task.ref['@ref'].id,
+        'title': this.task.data.title,
+        'completed': this.task.data.completed,
+        'editing': this.task.data.editing,
+        'category': this.task.data.category,
         'beforeEditCache': ''
       }
     },
@@ -61,11 +59,11 @@
         this.editing = false
         this.$emit('finishedEdit', {
           'task': {
-            'id': this.id,
             'title': this.title,
             'completed': this.completed,
             'editing': this.editing,
-          }
+          },
+          'id': this.id,
         })
       },
       editTask() {

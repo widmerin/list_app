@@ -6,19 +6,16 @@ const client = new faunadb.Client({
 })
 
 exports.handler = (event, context, callback) => {
-  console.log("Function `get-categories` invoked")
   return client.query(q.Paginate(q.Match(q.Ref("indexes/get_categories"))))
     .then((response) => {
-      const recipeRefs = response.data
-      console.log("Categories refs", recipeRefs)
-      console.log(`${recipeRefs.length} categories found`)
-      const getAllRecipeDataQuery = recipeRefs.map((ref) => {
+      const refs = response.data
+      const getAllDataQuery = refs.map((ref) => {
         return q.Get(ref)
       })
-      return client.query(getAllRecipeDataQuery).then((ret) => {
+      return client.query(getAllDataQuery).then((res) => {
         return callback(null, {
           statusCode: 200,
-          body: JSON.stringify(ret)
+          body: JSON.stringify(res)
         })
       })
     }).catch((error) => {

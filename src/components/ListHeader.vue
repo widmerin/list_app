@@ -4,7 +4,7 @@
     <nav class="list-header-nav-extended nav-extended">
       <div class="list-header-nav-content nav-content">
         <ul class="tabs tabs-transparent">
-          <li class="tab" v-for="(list, index)  in lists" :key="index"><a href="#" v-bind:class="{ active: index ==  currentListId}" @click="selectList(index)">{{ list.name }}</a></li>
+          <li class="tab" v-for="(list, index)  in lists" :key="index"><a href="#" v-bind:class="{ active: index ==  currentListId}" @click="selectList(index)">{{ list.data.name }}</a></li>
         </ul>
       </div>
     </nav>
@@ -60,9 +60,11 @@
         this.$emit('selectedList', id)
       },
       selectCategory(id) {
-        this.showCategoryDropdown = false
-        this.selectedCategory = this.getCategoryName(id)
-        this.$emit('selectedCategory', getReferenceId(this.categories[id]))
+        if(id) {
+          this.showCategoryDropdown = false
+          this.selectedCategory = this.getCategoryName(id)
+          this.$emit('selectedCategory', getReferenceId(this.categories[id]))
+        }
       },
       getCategoryName(id) {
         return this.categories[id].data.name

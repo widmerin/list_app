@@ -10,12 +10,12 @@
 
     <h5>Create new Task</h5>
     <div class="input-field">
-      <input type="text" placeholder="Add new Task ..." class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask" autofocus>
+      <input type="text" placeholder="Add new Task ..." id="inputText1" class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask" autofocus>
     </div>
     <div class="input-field">
       <select class="list-footer-modal-category" v-model="newCategory">
         <option disabled selected value="">Category</option>
-        <option v-for="category in categories" v-bind:value="category.ref['@ref'].id" :key="category">
+        <option v-for="(category, index) in categories" v-bind:value="category.ref['@ref'].id" :key="index">
           {{ category.data.name }}
         </option>
       </select>
@@ -56,7 +56,7 @@
     watch:{
     showModal:function(value){
      // set the focus when the modal opened/closed
-      this.$refs.inputText1.focus();
+     // this.$refs.inputText1.focus();
     }
   },
   }
