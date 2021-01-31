@@ -17,7 +17,7 @@
       <div class="list-header-nav-filter-dropdown">
         <i class="material-icons list-header-nav-filter-dropdown-icon" @click="showCategoryDropdown=!showCategoryDropdown">filter_list</i>
         <ul class="list-header-nav-filter-dropdown-content" v-if="showCategoryDropdown">
-          <li v-for="(category, index)  in categories" :key="index"><a href="#" class="active" @click="selectCategory(index)">{{ category.data.name }}</a></li>
+          <li v-for="(category, index)  in categories" :key="index"><a href="#" @click="selectCategory(index)">{{ category.data.name }}</a></li>
         </ul>
       </div>
     </div>
@@ -61,11 +61,9 @@
         this.$emit('selectedList', id)
       },
       selectCategory(id) {
-        if(id) {
-          this.showCategoryDropdown = false
-          this.selectedCategory = this.getCategoryName(id)
-          this.$emit('selectedCategory', getReferenceId(this.categories[id]))
-        }
+        this.showCategoryDropdown = false
+        this.selectedCategory = this.getCategoryName(id)
+        this.$emit('selectedCategory', getReferenceId(this.categories[id]))
       },
       refreshData() {
         this.$emit('refreshedData')
