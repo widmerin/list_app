@@ -26,10 +26,6 @@ import ListFooter from './ListFooter.vue'
 import draggable from 'vuedraggable'
 import axios from 'axios';
 import { deleteTask, getReferenceId, updateTask } from '@/helpers/utils';
-import categoriesJson from '../../data/categories.json'
-import listsJson from '../../data/lists.json'
-import tasksJson from '../../data/tasks.json'
-
 
 export default {
   components: {
@@ -41,7 +37,7 @@ export default {
   name: 'List',
   data() {
     return {
-      debug: false,
+      debug: true,
       componentListItem: 0,
       newTask: '',
       idForTask: 4,
@@ -69,9 +65,7 @@ export default {
   },
   methods: {
     fetchData() {
-
-          // Fetch data from faunaDB
-      if(this.debug == false) {
+      // Fetch data from faunaDB
       axios
       .get('/.netlify/functions/get-categories')
       .then(response => (this.categories = response.data))
@@ -81,18 +75,6 @@ export default {
       axios
         .get('/.netlify/functions/get-tasks')
         .then(response => (this.tasks = response.data))
-      }
-      else {
-        if (categoriesJson) {
-          this.categories = categoriesJson
-        }
-        if (listsJson) {
-          this.lists = listsJson
-        }
-        if(tasksJson) {
-          this.tasks = tasksJson
-        }
-      }
     },
     filterTasksByCategory: function(tasks){
       if(this.currentCategory != 0) {
