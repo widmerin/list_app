@@ -6,6 +6,6 @@ node_modules
 dist
 .env
 .env.*
-
+data
 # Local Netlify folder
 .netlify

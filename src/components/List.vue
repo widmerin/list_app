@@ -1,6 +1,6 @@
 <template>
   <div class="list">
-    <list-header :lists="lists" :categories="categories" :currentListId="currentListId" @selectedList="selectList" @selectedCategory="selectCategory"></list-header>
+    <list-header :lists="lists" :categories="categories" :currentListId="currentListId" @selectedList="selectList" @refreshedData="refreshData" @selectedCategory="selectCategory"></list-header>
     <div class="list-content">
       <div class="list-content-tasks-active" v-if="this.tasks">
         <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
@@ -26,7 +26,9 @@ import ListFooter from './ListFooter.vue'
 import draggable from 'vuedraggable'
 import axios from 'axios';
 import { deleteTask, getReferenceId, updateTask } from '@/helpers/utils';
-
+import categoriesJson from '../../data/categories.json'
+import listsJson from '../../data/lists.json'
+import tasksJson from '../../data/tasks.json'
 
 
 export default {
@@ -53,33 +55,38 @@ export default {
     }
   },
   mounted () {
-    // Fetch data from faunaDB
-    axios
-     .get('/.netlify/functions/get-categories')
-     .then(response => (this.categories = response.data))
-    axios
-      .get('/.netlify/functions/get-lists')
-      .then(response => (this.lists = response.data))
-    axios
-      .get('/.netlify/functions/get-tasks')
-      .then(response => (this.tasks = response.data))
+    this.fetchData()
   },
   computed: {
     tasksFilteredActive:{
       get() {
-        return this.filterTasksCurrentList(this.filterTasksActive(this.tasks)) //this.filterTasksCurrentList(this.filterTasksActive((this.tasks)))
+        return this.filterTasksByCategory(this.filterTasksCurrentList(this.filterTasksActive(this.tasks)))
       },
-    /*  set(tasks) {
-        // add completed tasks to active list and save list.
-        tasks = tasks.concat((this.tasks.filter(task => task.completed)))
-        this.lists[this.currentListId].tasks = tasks
-      }*/
     },
     tasksFilteredCompleted() {
         return this.filterTasksCurrentList(this.filterTasksCompleted(this.tasks))
     }
   },
   methods: {
+    fetchData() {
+          // Fetch data from faunaDB
+      if(this.debug == false) {
+      axios
+      .get('/.netlify/functions/get-categories')
+      .then(response => (this.categories = response.data))
+      axios
+        .get('/.netlify/functions/get-lists')
+        .then(response => (this.lists = response.data))
+      axios
+        .get('/.netlify/functions/get-tasks')
+        .then(response => (this.tasks = response.data))
+      }
+      else {
+        this.categories = categoriesJson
+        this.lists = listsJson
+        this.tasks = tasksJson
+      }
+    },
     filterTasksByCategory: function(tasks){
       if(this.currentCategory != 0) {
         return tasks.filter(task => task.data.category == this.currentCategory)
@@ -135,6 +142,7 @@ export default {
       this.tasks.splice(index, 1)
     },
     finishedEdit(data) {
+      console.log(data.id)
       let index = this.tasks.map(item => item.ref['@ref'].id).indexOf(data.id)
 
       this.tasks[index].data.title = data.task.title
@@ -143,6 +151,10 @@ export default {
 
       // Update Task in DB
       updateTask(data.id, data.task)
+    },
+    refreshData(){
+      this.fetchData()
+      console.log("refresh data")
     }
   }
 }

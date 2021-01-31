@@ -8,6 +8,7 @@
         </ul>
       </div>
     </nav>
+    <i class="material-icons list-header-nav-sync-icon" @click="refreshData">sync</i>
   </div>
     <div class="list-header-nav-filter">
       <div class="list-header-selected-category">
@@ -66,6 +67,9 @@
           this.$emit('selectedCategory', getReferenceId(this.categories[id]))
         }
       },
+      refreshData() {
+        this.$emit('refreshedData')
+      },
       getCategoryName(id) {
         return this.categories[id].data.name
       },
@@ -116,6 +120,11 @@ header {
   &-nav {
     &-extended {
       box-shadow: none;
+    }
+    &-sync-icon {
+      margin-right: 0;
+      padding-left: 15px;
+      cursor: pointer;
     }
     &-filter {
       display: flex;
