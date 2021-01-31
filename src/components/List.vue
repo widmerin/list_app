@@ -69,6 +69,7 @@ export default {
   },
   methods: {
     fetchData() {
+
           // Fetch data from faunaDB
       if(this.debug == false) {
       axios
@@ -82,9 +83,15 @@ export default {
         .then(response => (this.tasks = response.data))
       }
       else {
-        this.categories = categoriesJson
-        this.lists = listsJson
-        this.tasks = tasksJson
+        if (categoriesJson) {
+          this.categories = categoriesJson
+        }
+        if (listsJson) {
+          this.lists = listsJson
+        }
+        if(tasksJson) {
+          this.tasks = tasksJson
+        }
       }
     },
     filterTasksByCategory: function(tasks){
