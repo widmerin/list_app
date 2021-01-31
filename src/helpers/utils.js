@@ -1,32 +1,34 @@
+import axios from 'axios';
+
 function bar() {
     return 'bar';
 }
 
 function getCategories() {
-  return fetch('/.netlify/functions/get-categories',{
+  return axios('/.netlify/functions/get-categories',{
        headers : {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
        }
       }).then((response) => {
-    return response.json()
+    this.cat = response
   })
 }
 
 function getLists(){
-  return fetch('/.netlify/functions/get-lists').then((response) => {
+  return axios('/.netlify/functions/get-lists').then((response) => {
     return response.json()
   })
 }
 
 function getTasks(){
-  return fetch('/.netlify/functions/get-tasks').then((response) => {
+  return axios('/.netlify/functions/get-tasks').then((response) => {
     return response.json()
   })
 }
 
 function createCategory(data){
-  return fetch('./.netlify/functions/create-category', {
+  return axios('./.netlify/functions/create-category', {
   headers : {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
@@ -40,7 +42,7 @@ function createCategory(data){
 
 
 function updateTask(data){
-  return fetch('./.netlify/functions/post-category', {
+  return axios('./.netlify/functions/post-category', {
   headers : {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
@@ -53,7 +55,7 @@ function updateTask(data){
 }
 
 function deleteTask(data){
-  return fetch('./.netlify/functions/create-category', {
+  return axios('./.netlify/functions/create-category', {
   headers : {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
@@ -65,4 +67,8 @@ function deleteTask(data){
   })
 }
 
-export { bar, getCategories, createCategory };
+function getReferenceId(element) {
+      return element.ref['@ref'].id
+    }
+
+export { bar, getCategories, createCategory, getReferenceId };

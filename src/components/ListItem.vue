@@ -9,7 +9,7 @@
           <input v-else class="list-item-edit" type="text" v-model="title" @blur="doneEdit" @keyup.enter="doneEdit" @keyup.esc="cancelEdit" v-focus>
 
       </div>
-      <div class="list-item-category" v-if="!completed">{{ getCategoryName(task.category) }}</div>
+      <div class="list-item-category" v-if="!completed">{{ getCategoryName(task.category)}}</div>
       <div class="list-item-remove" @click="removeTask">&times;</div>
 
 
@@ -73,8 +73,11 @@
         this.editing = true
       },
       getCategoryName(id) {
-      if(id > 0) {
-        return this.categories[this.categories.map(item => item.id).indexOf(id)].name
+      if (id != 0) {
+        const categories = this.categories.filter(category => category.ref['@ref'].id == id)
+        if(categories[0]) {
+          return categories[0].data.name
+        }
       }
     },
       removeTask() {

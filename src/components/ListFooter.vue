@@ -15,8 +15,8 @@
     <div class="input-field">
       <select class="list-footer-modal-category" v-model="newCategory">
         <option disabled selected value="">Category</option>
-        <option v-for="category in categories" v-bind:value="category.id" :key="category">
-          {{ category.name }}
+        <option v-for="category in categories" v-bind:value="category.ref['@ref'].id" :key="category">
+          {{ category.data.name }}
         </option>
       </select>
     </div>

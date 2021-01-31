@@ -16,7 +16,7 @@
       <div class="list-header-nav-filter-dropdown">
         <i class="material-icons list-header-nav-filter-dropdown-icon" @click="showCategoryDropdown=!showCategoryDropdown">filter_list</i>
         <ul class="list-header-nav-filter-dropdown-content" v-if="showCategoryDropdown">
-          <li v-for="(category, index)  in categories" :key="index"><a href="#" class="active" @click="selectCategory(index)">{{ category.name }}</a></li>
+          <li v-for="(category, index)  in categories" :key="index"><a href="#" class="active" @click="selectCategory(index)">{{ category.data.name }}</a></li>
         </ul>
       </div>
     </div>
@@ -24,6 +24,7 @@
 </template>
 
 <script>
+  import { getReferenceId } from '@/helpers/utils';
   export default {
     name: 'list-header',
     props: {
@@ -61,10 +62,10 @@
       selectCategory(id) {
         this.showCategoryDropdown = false
         this.selectedCategory = this.getCategoryName(id)
-        this.$emit('selectedCategory', this.categories[id].id)
+        this.$emit('selectedCategory', getReferenceId(this.categories[id]))
       },
       getCategoryName(id) {
-        return this.categories[id].name
+        return this.categories[id].data.name
       },
       removeCategory() {
         this.selectedCategory = ''

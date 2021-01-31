@@ -21,6 +21,7 @@
     </div>
     <list-footer @addedTask="addTask" :categories="categories"></list-footer>
   </div>
+
 </template>
 
 <script>
@@ -28,13 +29,17 @@ import ListItem from './ListItem.vue'
 import ListHeader from './ListHeader.vue'
 import ListFooter from './ListFooter.vue'
 import draggable from 'vuedraggable'
+import axios from 'axios';
+import { getCategories, createCategory, getReferenceId } from '@/helpers/utils';
+
+
 
 export default {
   components: {
     ListItem,
     ListHeader,
     ListFooter,
-    draggable,
+    draggable
   },
   name: 'List',
   data() {
@@ -56,35 +61,35 @@ export default {
                 'title': 'Zitrone',
                 'completed': false,
                 'editing': false,
-                'category': 11
+                'category': "289052446654726661"
               },
               {
                 'id': 2,
                 'title': 'Tofu',
                 'completed': false,
                 'editing': false,
-                'category': 12
+                'category': "289052502663365125"
               },
               {
                 'id': 3,
                 'title': 'Mehl',
                 'completed': true,
                 'editing': false,
-                'category': 11
+                'category': "289052520086503941"
               },
                             {
                 'id': 4,
                 'title': 'Hafermilch',
                 'completed': false,
                 'editing': false,
-                'category': 13
+                'category': "289052520086503941"
               },
                 {
                 'id': 5,
                 'title': 'Kaffe',
                 'completed': false,
                 'editing': false,
-                'category': 12
+                'category': "289052520086503941"
               }
             ],
           },
@@ -97,14 +102,14 @@ export default {
                 'title': 'Lampe',
                 'completed': false,
                 'editing': false,
-                'category': 12
+                'category': "289052520086503941"
               },
               {
                 'id': 12,
                 'title': 'Vorhänge',
                 'completed': false,
                 'editing': false,
-                'category': 13
+                'category': "289052520086503941"
               }
             ],
           },
@@ -145,21 +150,22 @@ export default {
           ],
         }
       ],
-      categories: [
-        {
-          'id': 11,
-          'name': 'Bioladen',
-        },
-        {
-          'id': 12,
-          'name': 'Coop',
-        },
-        {
-          'id': 13,
-          'name': 'Migros',
-        }
-      ],
+      categories: [],
+      lis: [],
+      tasks: [],
     }
+  },
+  mounted () {
+    // Fetch data from faunaDB
+    axios
+     .get('/.netlify/functions/get-categories')
+     .then(response => (this.categories = response.data))
+    axios
+      .get('/.netlify/functions/get-lists')
+      .then(response => (this.lis = response.data))
+    axios
+      .get('/.netlify/functions/get-tasks')
+      .then(response => (this.tasks = response.data))
   },
   computed: {
     tasksFilteredActive:{
@@ -178,7 +184,7 @@ export default {
   },
   methods: {
     filterTasksByCategory: function(tasks){
-      if(this.currentCategory > 0) {
+      if(this.currentCategory != 0) {
         return tasks.filter(task => task.category == this.currentCategory)
       }
         return tasks
@@ -219,6 +225,21 @@ export default {
         completed: false,
       })
     },
+
+    addCategory() {
+      // Todo data
+      const myTodo = {
+        name: 'My todo title'
+      }
+
+      // create it!
+      createCategory(myTodo).then((response) => {
+        console.log('API response', response)
+        // set app state
+      }).catch((error) => {
+        console.log('API error', error)
+      })
+    },
     cancelEdit(task) {
       task.editing = false
       task.title = this.beforeEditCache
@@ -238,7 +259,7 @@ export default {
       let index = this.lists[this.currentListId].tasks.map(item => item.id).indexOf(data.task.id)
       // update todo item data
       this.lists[this.currentListId].tasks.splice(index, 1, data.task)
-    }
+    },
   }
 }
 </script>
