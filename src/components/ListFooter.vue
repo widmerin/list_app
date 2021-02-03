@@ -1,13 +1,13 @@
 <template>
 
-<div class="list-footer">
+<div class="list-footer" >
   <div class="list-footer-add">
     <div class="input-field">
       <input type="text" placeholder="Add Task..." ref="input" class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask">
 
     </div>
     <div>
-      <input type="submit" placeholder="Add Task..." click="addTask" value="+" ref="btn" class="list-footer-add-icon">
+      <input type="submit" placeholder="Add Task..." @click="addTask" value="+" ref="btn" class="list-footer-add-icon">
 
 
     </div>
@@ -31,12 +31,10 @@
     },
     methods: {
       addTask() {
-        if (this.newTask.trim().length == 0) {
-          return
+        if (this.newTask.trim().length != 0) {
+          this.$emit('addedTask', this.newTask, this.newCategory)
+          this.newTask = ''
         }
-        this.$emit('addedTask', this.newTask, this.newCategory)
-        this.newTask = ''
-        this.newCategory = ''
         this.$refs.btn.focus()
       },
     },
