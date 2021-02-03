@@ -4,9 +4,12 @@
   <div class="list-footer-add">
     <div class="input-field">
       <input type="text" placeholder="Add Task..." ref="input" class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask">
+
     </div>
     <div>
-      <span  @click="addTask" ref="btn" class="list-footer-add-icon material-icons">+</span>
+      <input type="submit" placeholder="Add Task..." click="addTask" value="+" ref="btn" class="list-footer-add-icon">
+
+
     </div>
   </div>
 </div>
@@ -47,7 +50,7 @@
     background-color: #312c51;
     padding: 0 15px;
     position: fixed;
-    bottom:0%;
+    bottom: -1px;
     width:100%;
     padding: 0;
     max-width: 600px;
@@ -59,8 +62,14 @@
       justify-content: center;
       &-icon {
         cursor: pointer;
-        padding: 0 5px;
-        line-height: 0em;
+        height: 30px;
+        margin: 0;
+        padding: 5px;
+        background: transparent;
+        line-height: 0.2em;
+        color: white;
+        font-size: 30px;
+        border: none;
       }
       .input-field {
         width: 100%;
@@ -73,7 +82,6 @@
         }
         input::-webkit-input-placeholder {
           text-transform: uppercase;
-          //font-size: 12px;
         }
       }
       .btn {
