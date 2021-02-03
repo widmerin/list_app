@@ -5,13 +5,12 @@
         <label>
           <input type="checkbox"  v-model="completed" @change="doneEdit"  /><span></span>
         </label>
-          <span v-if="!editing" @dblclick="editTask" :class="{ completed : completed }">{{ task.data.title }}</span>
+          <span v-if="!editing" @click="editTask" :class="{ completed : completed }">{{ task.data.title }}</span>
           <input v-else class="list-item-edit" type="text" v-model="title" @blur="doneEdit" @keyup.enter="doneEdit" @keyup.esc="cancelEdit" v-focus>
 
       </div>
-      <div class="list-item-category" @click="editCategory=!editCategory" v-if="!completed && !editCategory" >{{ getCategoryName(task.data.category)}}</div>
-      <select class="list-item-category-select" v-model="category" v-if="editCategory" @change="doneEdit">
-        <option selected value="">-- No Category --</option>
+      <select class="list-item-category-select" v-model="category" @change="doneEdit" dir="rtl">
+        <option selected value=""></option>
         <option v-for="(category, index) in categories" v-bind:value="category.ref['@ref'].id" :key="index">
           {{ category.data.name }}
         </option>
@@ -116,18 +115,23 @@
 
   &-edit {
     height: 2em;
-      border-bottom: 2px solid #48426d !important;
+    border-bottom: 2px solid #48426d !important;
     max-width: 250px;
   }
   &-category {
-    text-transform: uppercase;
-    font-size: 12px;
-    padding: 0 5px;
-
     &-select {
       display: inline-block;
-      max-width: 120px;
-      border: 2px solid #48426d;
+      text-transform: uppercase;
+      font-size: 12px;
+      padding: 0 5px;
+      color: #48426d;
+      border: none;
+      max-width: 110px;
+      // remove dropdown icon.
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      text-indent: 1px;
+      text-overflow: '';
     }
   }
   &-remove {
