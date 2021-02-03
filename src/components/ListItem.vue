@@ -111,6 +111,10 @@
     display: flex;
     align-items: center;
     justify-content: stretch;
+    label {
+      padding-top: 6px;
+      padding-left: 9px;
+    }
   }
 
   &-edit {
@@ -127,7 +131,7 @@
       color: #48426d;
       border: none;
       max-width: 110px;
-      // remove dropdown icon.
+      // remove dropdown icon
       -webkit-appearance: none;
       -moz-appearance: none;
       text-indent: 1px;

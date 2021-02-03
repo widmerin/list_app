@@ -157,7 +157,7 @@ export default {
   }
   &-tasks-active,
   &-tasks-completed {
-    padding-bottom: 15px;
+    padding-bottom: 50px;
     &-icon {
       float: right;
       margin-right: 0;
