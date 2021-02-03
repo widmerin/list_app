@@ -3,10 +3,10 @@
 <div class="list-footer">
   <div class="list-footer-add">
     <div class="input-field">
-      <input type="text" placeholder="Add Task..." id="inputText1" class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask" autofocus>
+      <input type="text" placeholder="Add Task..." ref="input" class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask">
     </div>
     <div>
-      <span  @click="addTask" class="list-footer-add-icon material-icons">+</span>
+      <span  @click="addTask" ref="btn" class="list-footer-add-icon material-icons">+</span>
     </div>
   </div>
 </div>
@@ -34,7 +34,7 @@
         this.$emit('addedTask', this.newTask, this.newCategory)
         this.newTask = ''
         this.newCategory = ''
-        this.showModal = false;
+        this.$refs.btn.focus()
       },
     },
 
@@ -43,7 +43,7 @@
 
 <style lang='scss'>
 .list-footer {
-    height: 50px;
+    height: 60px;
     background-color: #312c51;
     padding: 0 15px;
     position: fixed;
@@ -53,13 +53,14 @@
     max-width: 600px;
     color: #fff;
     &-add {
-      padding: 0 15px;
+      padding: 5px 15px;
       display: flex;
       align-items: center;
       justify-content: center;
       &-icon {
         cursor: pointer;
         padding: 0 5px;
+        line-height: 0em;
       }
       .input-field {
         width: 100%;
@@ -72,7 +73,7 @@
         }
         input::-webkit-input-placeholder {
           text-transform: uppercase;
-          font-size: 12px;
+          //font-size: 12px;
         }
       }
       .btn {
