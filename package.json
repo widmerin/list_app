@@ -14,8 +14,10 @@
     "material-design-icons": "^3.0.1",
     "materialize-css": "^1.0.0-rc.2",
     "netlify": "^6.1.7",
+    "netlify-identity-widget": "^1.9.1",
     "register-service-worker": "^1.7.2",
-    "vuedraggable": "^2.24.3"
+    "vuedraggable": "^2.24.3",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "node-sass": "^5.0.0",
