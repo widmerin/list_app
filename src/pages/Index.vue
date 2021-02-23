@@ -1,15 +1,18 @@
 <template>
   <div id="app" class="container">
     <div v-if="!currentUser" >
-    <list></list>
-      <p>
-        <button @click="triggerNetlifyIdentityAction('logout')">Log Out</button>
-      </p>
+       <div class="list">
+        <p>
+          <button @click="triggerNetlifyIdentityAction('login')">Log In</button>
+        </p>
+       </div>
     </div>
     <div v-else>
-      <p style="color:white">You are not logged in.</p>
+      <list></list>
+
+      <p style="color:white">You are not logged in as {{ currentUser.username }}</p>
+      <button @click="triggerNetlifyIdentityAction('logout')">Log Out</button>
       <p>
-        <button @click="triggerNetlifyIdentityAction('login')">Log In</button>
       </p>
     </div>
   </div>
@@ -42,9 +45,11 @@ export default {
       return this.user ? this.user.username : ", there!";
     }
   },
-  data: () => ({
-    currentUser: null,
-  }),
+  data() {
+    return {
+      currentUser: null,
+    }
+  },
   methods: {
     triggerNetlifyIdentityAction(action) {
       if (action == "login" || action == "signup") {
