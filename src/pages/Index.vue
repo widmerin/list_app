@@ -17,18 +17,20 @@
 <script>
 
 import List from '~/components/List.vue'
-import netlifyIdentity from 'netlify-identity-widget';
 import { mapGetters, mapActions } from 'vuex';
 
-netlifyIdentity.init({
-  APIUrl: "https://jovial-mccarthy-2c45ae.netlify.app/.netlify/identity",
-  logo: true // you can try false and see what happens
-});
 
 export default {
   components: {
     List
   },
+      mounted() {
+        window.netlifyIdentity = require('netlify-identity-widget')
+        netlifyIdentity.init({
+      APIUrl: "https://jovial-mccarthy-2c45ae.netlify.app/.netlify/identity",
+      logo: true // you can try false and see what happens
+    })
+      },
   metaInfo: {
     title: 'The List'
   },
