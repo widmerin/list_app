@@ -20,8 +20,6 @@
 <script>
 
 import List from '~/components/List.vue'
-import { mapGetters, mapActions } from 'vuex';
-
 
 export default {
   components: {
@@ -30,20 +28,12 @@ export default {
       mounted() {
         window.netlifyIdentity = require('netlify-identity-widget')
         netlifyIdentity.init({
-      APIUrl: "https://jovial-mccarthy-2c45ae.netlify.app/.netlify/identity",
-      logo: true // you can try false and see what happens
-    })
+          APIUrl: "https://jovial-mccarthy-2c45ae.netlify.app/.netlify/identity",
+          logo: true // you can try false and see what happens
+        })
       },
   metaInfo: {
     title: 'The List'
-  },
-   computed: {
-    ...mapGetters("user", {
-
-    }),
-    username() {
-      return this.user ? this.user.username : ", there!";
-    }
   },
   data() {
     return {
@@ -93,5 +83,6 @@ body {
   font-size: 18px;
   min-height: 350px;
   width: 100%;
+  padding-bottom: 50px;
 }
 </style>
