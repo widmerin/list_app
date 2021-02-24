@@ -10,8 +10,6 @@
     </div>
     <div v-else>
       <list></list>
-
-      <p style="color:white">You are logged in as {{ currentUser.username }}</p>
       <button class="waves-effect waves-light btn" @click="triggerNetlifyIdentityAction('logout')">Log Out</button>
       <p>
       </p>

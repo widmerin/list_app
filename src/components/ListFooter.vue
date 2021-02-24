@@ -1,17 +1,24 @@
 <template>
 
-<div class="list-footer" >
-  <div class="list-footer-add">
-    <div class="input-field">
-      <input type="text" placeholder="Add Task..." ref="input" class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask">
+<div class="list-footer">
+  <!-- overlay -->
+  <div class="list-footer-overlay" v-if="showModal" @click="closeModal()"></div>
 
-    </div>
-    <div>
-      <input type="submit" placeholder="Add Task..." @click="addTask" value="+" ref="btn" class="list-footer-add-icon">
+  <!-- modal -->
+  <div class="list-footer-modal" v-if="showModal">
+    <button class="list-footer-modal-close" @click="closeModal()">x</button>
 
-
-    </div>
+    <h5>Create new Task</h5>
+    <input type="text" ref="task" placeholder="Add to List ..." class="list-footer-modal-task" v-model="newTask" autofocus  v-on:keyup.enter="addTask">
+      <select class="list-footer-modal-category" v-model="newCategory">
+        <option selected value=""></option>
+        <option v-for="(category, index) in categories" v-bind:value="category.ref['@ref'].id" :key="index">
+          {{ category.data.name }}
+        </option>
+      </select>
+    <button class="waves-effect waves-light btn" @click="addTask">Add Task</button>
   </div>
+  <button class="waves-effect waves-light btn list-footer-add-btn" @click="openModal()">+</button>
 </div>
 </template>
 
@@ -27,65 +34,87 @@
     data() {
       return {
         newTask: '',
+        newCategory: '',
+        showModal: false,
       }
     },
     methods: {
-      addTask() {
-        if (this.newTask.trim().length != 0) {
-          this.$emit('addedTask', this.newTask, this.newCategory)
-          this.newTask = ''
-        }
-        this.$refs.btn.focus()
+      openModal() {
+       // this.$refs.task.focus()
+        this.showModal = true
       },
-    },
-
+      closeModal() {
+        this.showModal = false
+      },
+      addTask() {
+        if (this.newTask.trim().length == 0) {
+          return
+        }
+        this.$emit('addedTask', this.newTask, this.newCategory)
+        this.newTask = ''
+        this.newCategory = ''
+        this.showModal = false;
+      },
+     
+    }
   }
 </script>
 
 <style lang='scss'>
 .list-footer {
-    height: 60px;
-    background-color: #312c51;
-    padding: 0 15px;
-    position: fixed;
-    bottom: -1px;
-    width:100%;
-    padding: 0;
-    max-width: 600px;
-    color: #fff;
-    &-add {
-      padding: 5px 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      &-icon {
-        cursor: pointer;
-        height: 30px;
-        margin: 0;
-        padding: 5px;
-        background: transparent;
-        line-height: 0.2em;
-        color: white;
-        font-size: 30px;
-        border: none;
-      }
-      .input-field {
-        width: 100%;
-        padding-right: 15px;
-        margin-top: 0;
-        height: 42px;
-        input {
-          min-width: 100%;
-          color: #fff;
-        }
-        input::-webkit-input-placeholder {
-          text-transform: uppercase;
-        }
-      }
-      .btn {
-        height: 25px
-      }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
+  &-add-btn {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    text-align: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    color: white;
+    text-decoration: none
+  }
+
+  &-overlay {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+  }
+
+  &-modal {
+    position:absolute;
+    top: 50px;
+    width: 300px;
+    min-height: 250px;
+    z-index: 9999;
+    margin: 0 auto;
+    padding: 20px 30px;
+    background-color: #fff;
+    &-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 5px 10px;
+      background: none;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    &-category {
+      display: inline-block;
+    }
   }
 }
 </style>
