@@ -10,7 +10,7 @@
     <div v-else>
       <list></list>
 
-      <p style="color:white">You are not logged in as {{ currentUser.username }}</p>
+      <p style="color:white">You are logged in as {{ currentUser.username }}</p>
       <button @click="triggerNetlifyIdentityAction('logout')">Log Out</button>
       <p>
       </p>
@@ -25,13 +25,15 @@ export default {
   components: {
     List
   },
-      mounted() {
-        window.netlifyIdentity = require('netlify-identity-widget')
-        netlifyIdentity.init({
-          APIUrl: "https://jovial-mccarthy-2c45ae.netlify.app/.netlify/identity",
-          logo: true // you can try false and see what happens
-        })
-      },
+  mounted() {
+    window.netlifyIdentity = require('netlify-identity-widget')
+    netlifyIdentity.init({
+      APIUrl: "https://jovial-mccarthy-2c45ae.netlify.app/.netlify/identity"
+    })
+    this.currentUser = netlifyIdentity.currentUser()
+    
+
+  },
   metaInfo: {
     title: 'The List'
   },
