@@ -1,9 +1,10 @@
 <template>
   <div id="app" class="container">
     <div v-if="!currentUser" >
-       <div class="list">
+       <div class="login">
+        <h1>The List</h1>
         <p>
-          <button @click="triggerNetlifyIdentityAction('login')">Log In</button>
+          <button class="waves-effect waves-light btn" @click="triggerNetlifyIdentityAction('login')">Log In</button>
         </p>
        </div>
     </div>
@@ -11,7 +12,7 @@
       <list></list>
 
       <p style="color:white">You are logged in as {{ currentUser.username }}</p>
-      <button @click="triggerNetlifyIdentityAction('logout')">Log Out</button>
+      <button class="waves-effect waves-light btn" @click="triggerNetlifyIdentityAction('logout')">Log Out</button>
       <p>
       </p>
     </div>
@@ -86,5 +87,14 @@ body {
   min-height: 350px;
   width: 100%;
   padding-bottom: 50px;
+}
+.login {
+  color: #FFF;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 300px;
 }
 </style>
