@@ -6,17 +6,18 @@
 
   <!-- modal -->
   <div class="list-footer-modal" v-if="showModal">
-    <button class="list-footer-modal-close" @click="closeModal()">x</button>
-
-    <h5>Create new Task</h5>
-    <input type="text" ref="task" placeholder="Add to List ..." class="list-footer-modal-task" v-model="newTask" autofocus  v-on:keyup.enter="addTask">
-      <select class="list-footer-modal-category" v-model="newCategory">
-        <option selected value=""></option>
+    <div class="list-footer-modal-form">
+      <button class="list-footer-modal-close" @click="closeModal()">x</button>
+      <h5>Create new Task</h5>
+      <input type="text" placeholder="Add Task..." ref="input" class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask">
+      <select class="list-footer-modal-category" v-model="newCategory" placeholder="Add Task..." >
+        <option value="" disabled selected>-- Category --</option>
         <option v-for="(category, index) in categories" v-bind:value="category.ref['@ref'].id" :key="index">
           {{ category.data.name }}
         </option>
       </select>
-    <button class="waves-effect waves-light btn" @click="addTask">Add Task</button>
+      <button class="waves-effect waves-light btn" @click="addTask">Add Task</button>
+    </div>
   </div>
   <button class="waves-effect waves-light btn list-footer-add-btn" @click="openModal()">+</button>
 </div>
@@ -40,8 +41,11 @@
     },
     methods: {
       openModal() {
-       // this.$refs.task.focus()
         this.showModal = true
+          // auto focus
+          this.$nextTick(function () {
+              this.$refs.input.focus()
+          })
       },
       closeModal() {
         this.showModal = false
@@ -67,20 +71,19 @@
   justify-content: center;
 
   &-add-btn {
-    position: absolute;
+    position: fixed;
     bottom: 15px;
     right: 15px;
     text-align: center;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 100%;
     display: inline-flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 25px;
-    color: white;
-    text-decoration: none
+    font-size: 30px;
+    padding-bottom: 4px;
   }
 
   &-overlay {
@@ -100,7 +103,6 @@
     min-height: 250px;
     z-index: 9999;
     margin: 0 auto;
-    padding: 20px 30px;
     background-color: #fff;
     &-close {
       position: absolute;
@@ -114,6 +116,25 @@
     }
     &-category {
       display: inline-block;
+    }
+    &-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      align-items: stretch;
+      justify-content: space-between;
+      height: 250px; 
+    }
+    input[type=text],
+    select {
+    box-sizing: border-box;
+    padding-left: 10px;
+    border: 1px solid;
+      &:focus {
+        border: 2px solid #26a69a;
+      }
     }
   }
 }
