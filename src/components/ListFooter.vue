@@ -8,8 +8,8 @@
   <div class="list-footer-modal" v-if="showModal">
     <div class="list-footer-modal-form">
       <button class="list-footer-modal-close" @click="closeModal()">x</button>
-      <h5>Create new Task</h5>
-      <input type="text" placeholder="Add Task..." ref="input" class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask">
+      <h5>New Task</h5>
+      <input type="text" placeholder="Task" ref="input" class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask">
       <select class="list-footer-modal-category" v-model="newCategory" placeholder="Add Task..." >
         <option value="" disabled selected>-- Category --</option>
         <option v-for="(category, index) in categories" v-bind:value="category.ref['@ref'].id" :key="index">
@@ -42,10 +42,12 @@
     methods: {
       openModal() {
         this.showModal = true
-          // auto focus
-          this.$nextTick(function () {
-              this.$refs.input.focus()
-          })
+        this.newTask = ''
+        this.newCategory = ''
+        // auto focus
+        this.$nextTick(function () {
+            this.$refs.input.focus()
+        })
       },
       closeModal() {
         this.showModal = false

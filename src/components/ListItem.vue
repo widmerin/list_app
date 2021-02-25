@@ -130,7 +130,7 @@
       padding: 0 5px;
       color: #48426d;
       border: none;
-      max-width: 110px;
+      max-width: 70px;
       // remove dropdown icon
       -webkit-appearance: none;
       -moz-appearance: none;
@@ -140,6 +140,7 @@
   }
   &-remove {
     cursor: pointer;
+    padding:  5px;
   }
 
 }
