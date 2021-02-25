@@ -1,4 +1,8 @@
 <template>
+  <div v-if="!loaded" class="loader">
+    <rotate-square2></rotate-square2>
+  </div>
+  <div v-else>
   <div class="list">
     <list-header :lists="lists" :categories="categories" :currentListId="currentListId" @selectedList="selectList" @refreshedData="refreshData" @selectedCategory="selectCategory"></list-header>
     <div class="list-content">
@@ -14,9 +18,11 @@
         <list-item v-if="showCompletedTasks" v-for="(task, index) in tasksFilteredCompleted" :key="componentListItem + task.ref['@ref'].id" :task="task" :categories="categories"  :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item >
       </div>
     </div>
+    <button class="waves-effect waves-light btn" @click="logout">Log Out</button>
+
     <list-footer @addedTask="addTask" :categories="categories"></list-footer>
   </div>
-
+ </div>
 </template>
 
 <script>
@@ -25,6 +31,7 @@ import ListHeader from './ListHeader.vue'
 import ListFooter from './ListFooter.vue'
 import draggable from 'vuedraggable'
 import axios from 'axios';
+import {RotateSquare2} from 'vue-loading-spinner'
 import { deleteTask, getReferenceId, updateTask } from '@/helpers/utils';
 
 export default {
@@ -32,11 +39,13 @@ export default {
     ListItem,
     ListHeader,
     ListFooter,
-    draggable
+    draggable,
+    RotateSquare2
   },
   name: 'List',
   data() {
     return {
+      loaded: false,
       debug: true,
       componentListItem: 0,
       newTask: '',
@@ -62,6 +71,9 @@ export default {
     tasksFilteredCompleted() {
         return this.filterTasksCurrentList(this.filterTasksCompleted(this.tasks))
     }
+  },
+  created() {
+    this.loaded = true
   },
   methods: {
     fetchData() {
@@ -144,12 +156,25 @@ export default {
     refreshData(){
       this.fetchData()
       console.log("refresh data")
+    },
+    logout(){
+      this.$emit('logout', 'logout')
     }
   }
 }
 </script>
 
 <style lang='scss'>
+ .loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transform: -webkit-translate(-50%, -50%);
+    transform: -moz-translate(-50%, -50%);
+    transform: -ms-translate(-50%, -50%);
+    color:darkred;
+  }
 .list-content {
   padding: 0 15px 15px;
   .completed {

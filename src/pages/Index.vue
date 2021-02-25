@@ -1,18 +1,16 @@
 <template>
   <div id="app" class="container">
-    <div v-if="!currentUser" >
-       <div class="login">
-        <h1>The List</h1>
-        <p>
-          <button class="waves-effect waves-light btn" @click="triggerNetlifyIdentityAction('login')">Log In</button>
-        </p>
-       </div>
-    </div>
-    <div v-else>
-      <list></list>
-      <button class="waves-effect waves-light btn" @click="triggerNetlifyIdentityAction('logout')">Log Out</button>
-      <p>
-      </p>
+      <div v-if="!currentUser" >
+        <div class="login">
+          <h1>The List</h1>
+          <p>
+            <button class="waves-effect waves-light btn" @click="triggerNetlifyIdentityAction('login')">Log In</button>
+          </p>
+        </div>
+      </div>
+      <div v-else>
+        <list @logout="triggerNetlifyIdentityAction"></list>
+      </div>
     </div>
   </div>
 </template>
@@ -30,8 +28,6 @@ export default {
       APIUrl: "https://jovial-mccarthy-2c45ae.netlify.app/.netlify/identity"
     })
     this.currentUser = netlifyIdentity.currentUser()
-    
-
   },
   metaInfo: {
     title: 'The List'
@@ -41,6 +37,7 @@ export default {
       currentUser: null,
     }
   },
+
   methods: {
     triggerNetlifyIdentityAction(action) {
       if (action == "login" || action == "signup") {
