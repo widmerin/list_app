@@ -11,8 +11,8 @@
       <div class="list-header-nav-filter-dropdown">
         <i class="material-icons list-header-nav-filter-dropdown-menu-icon" @click="showMenuDropdown=!showMenuDropdown">settings</i>
         <ul class="list-header-nav-filter-dropdown-content" v-if="showMenuDropdown">
-          <li @click="showModal = true"><i class="material-icons list-header-nav-icon" >edit</i>Lists</li>
-          <li @click="refreshData"><i class="material-icons list-header-nav-icon" >edit</i>Categories</li>
+          <li @click="openModal('lists')"><i class="material-icons list-header-nav-icon" >edit</i>Lists</li>
+          <li @click="openModal('categories')"><i class="material-icons list-header-nav-icon" >edit</i>Categories</li>
           <li @click="refreshData"><i class="material-icons list-header-nav-icon" >sync</i>Refresh</li>
           <li @click="logout"><i class="material-icons list-header-nav-icon">exit_to_app</i>Log Out</li>
         </ul>
@@ -36,12 +36,12 @@
   <div class="list-modal" v-if="showModal">
     <div class="list-modal-form">
       <button class="list-modal-close" @click="showModal = false">x</button>
-      <h5>Edit List</h5>
+      <h5>Edit {{modalType}}</h5>
        <ul >
-          <li v-for="(list, index) in lists" :key="index">{{ list.data.name }}<span class="list-modal-form-remove" @click="removeList(list.ref['@ref'].id, index)">&times;</span></li>
+          <li v-for="(list, index) in modalData" :key="index">{{ list.data.name }}<span class="list-modal-form-remove" @click="removeItem(list.ref['@ref'].id, index)">&times;</span></li>
         </ul>
-      <input type="text" placeholder="Create new List" ref="input" v-model="newList">
-      <button class="btn" @click="addList" v-on:keyup.enter="addList">Add List</button>
+      <input type="text" placeholder="Create new List" ref="input" v-model="newItem">
+      <button class="btn" @click="addItem" v-on:keyup.enter="addItem">Add List</button>
     </div>
   </div>
   </header>
@@ -66,26 +66,49 @@
     },
     data() {
       return {
-        newList: '',
+        newItem: '',
         showCategoryDropdown: false,
         showMenuDropdown: false,
         selectedCategory: '',
         showModal: false,
-        newList: '',
+        modalData: '',
+        modalType: ''
       }
     },
     methods: {
-      addList() {
-        if (this.newList.trim().length == 0) {
+      openModal(type) {
+        if (type == 'lists') {
+          this.modalData = this.lists
+          this.modalType = "Lists"
+        }
+        else if (type == 'categories') {
+          this.modalData = this.categories
+          this.modalType = "Categories"
+        }     
+        this.showModal = true,
+        this.showMenuDropdown = false,
+        this.showCategoryDropdown = false
+      },
+      addItem() {
+        if (this.newItem.trim().length == 0) {
           return
         }
-        this.$emit('addedList', this.newList)
-        this.newList = ''
+        if (this.modalType == 'Lists') {
+          this.$emit('addedList', this.newItem)
+        }
+        else if (this.modalType == 'Categories') {
+          this.$emit('addedCategory', this.newItem)
+        }
+        this.newItem = ''
         this.showModal = false;
-        this.showMenuDropdown = false;
       },
-      removeList(id, index) {
-        this.$emit('removedList', id, index)
+      removeItem(id, index) {
+        if (this.modalType == 'Lists') {
+          this.$emit('removedList', id, index)
+        }
+        else if (this.modalType == 'Categories') {
+          this.$emit('removedCategory', id, index)
+        }
       },
       logout(){
         this.$emit('logoutUser', 'logout')

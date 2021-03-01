@@ -1,6 +1,6 @@
 <template>
   <div class="list">
-    <list-header :lists="lists" :categories="categories" :currentListId="currentListId" @addedList="addList" @removedList="removeList" @logoutUser="logout" @selectedList="selectList" @refreshedData="refreshData" @selectedCategory="selectCategory"></list-header>
+    <list-header :lists="lists" :categories="categories" :currentListId="currentListId" @addedList="addList" @removedList="removeList" @addedCategory="addCategory" @removedCategory="removeCategory" @logoutUser="logout" @selectedList="selectList" @refreshedData="refreshData" @selectedCategory="selectCategory"></list-header>
     <div class="list-content">
       <div class="list-content-tasks-active" v-if="this.tasks">
         <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
@@ -24,7 +24,7 @@ import ListHeader from './ListHeader.vue'
 import ListFooter from './ListFooter.vue'
 import draggable from 'vuedraggable'
 import axios from 'axios';
-import { deleteList, deleteTask, getReferenceId, updateTask } from '@/helpers/utils';
+import { deleteCategory, deleteList, deleteTask, getReferenceId, updateTask } from '@/helpers/utils';
 
 export default {
   components: {
@@ -137,6 +137,17 @@ export default {
           console.log(error);
       })
     },
+    addCategory(name) {
+      axios.post(`/.netlify/functions/create-category`, {
+          name: name,
+      })
+      .then(response => {
+        this.categories.push(response.data)
+      })
+      .catch(function (error) {
+          console.log(error);
+      })
+    },
     removeTask(id) {
       let index = this.tasks.map(item => item.ref['@ref'].id).indexOf(id)
       // Delete Task in DB
@@ -152,6 +163,11 @@ export default {
       });
       deleteList(id)
       this.lists.splice(index, 1)
+    },
+    removeCategory(id, index) {
+      // remove category from all tasks
+      deleteCategory(id)
+      this.categories.splice(index, 1)
     },
     finishedEdit(data) {
       console.log(data.id)

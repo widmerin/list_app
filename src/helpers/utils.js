@@ -27,6 +27,13 @@ function deleteList(id){
   })
 }
 
+function deleteCategory(id){
+  axios.delete(`/.netlify/functions/delete-category/${id}`)
+  .catch(function (error) {
+      console.log(error);
+  })
+}
+
 function updateTask(id, data){
   axios.put(`/.netlify/functions/update-task/${id}`, data)
   .catch(function (error) {
@@ -39,4 +46,4 @@ function getReferenceId(element) {
       return element.ref['@ref'].id
     }
 
-export { deleteList, deleteTask, updateTask, getReferenceId };
+export { deleteCategory, deleteList, deleteTask, updateTask, getReferenceId };
