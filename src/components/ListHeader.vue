@@ -40,8 +40,8 @@
        <ul >
           <li v-for="(list, index) in modalData" :key="index">{{ list.data.name }}<span class="list-modal-form-remove" @click="removeItem(list.ref['@ref'].id, index)">&times;</span></li>
         </ul>
-      <input type="text" placeholder="Create new List" ref="input" v-model="newItem">
-      <button class="btn" @click="addItem" v-on:keyup.enter="addItem">Add List</button>
+      <input type="text" placeholder="Create new List" ref="input" v-model="newItem" v-on:keyup.enter="addItem">
+      <button class="btn" @click="addItem">Add List</button>
     </div>
   </div>
   </header>
@@ -85,8 +85,9 @@
           this.modalData = this.categories
           this.modalType = "Categories"
         }     
-        this.showModal = true,
-        this.showMenuDropdown = false,
+        this.newItem = ''
+        this.showModal = true
+        this.showMenuDropdown = false
         this.showCategoryDropdown = false
       },
       addItem() {

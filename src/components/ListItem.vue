@@ -105,7 +105,7 @@
   margin: 2px 0;
   background-color: #fff;
   color: #48426d;
-  font-size: 14px;
+  font-size: 16px;
 
   &-label {
     width: 100%;
@@ -113,8 +113,7 @@
     align-items: center;
     justify-content: stretch;
     label {
-      padding-top: 6px;
-      padding-left: 9px;
+      padding-left: 5px;
     }
     [type="checkbox"]+span:not(.lever) {
       padding-left: 30px;
