@@ -1,10 +1,6 @@
 <template>
-  <div v-if="!loaded" class="loader">
-    <rotate-square2></rotate-square2>
-  </div>
-  <div v-else>
   <div class="list">
-    <list-header :lists="lists" :categories="categories" :currentListId="currentListId" @selectedList="selectList" @refreshedData="refreshData" @selectedCategory="selectCategory"></list-header>
+    <list-header :lists="lists" :categories="categories" :currentListId="currentListId" @addedList="addList" @removedList="removeList" @logoutUser="logout" @selectedList="selectList" @refreshedData="refreshData" @selectedCategory="selectCategory"></list-header>
     <div class="list-content">
       <div class="list-content-tasks-active" v-if="this.tasks">
         <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
@@ -18,11 +14,8 @@
         <list-item v-if="showCompletedTasks" v-for="(task, index) in tasksFilteredCompleted" :key="componentListItem + task.ref['@ref'].id" :task="task" :categories="categories"  :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item >
       </div>
     </div>
-    <button class="waves-effect waves-light btn" @click="logout">Log Out</button>
-
     <list-footer @addedTask="addTask" :categories="categories"></list-footer>
   </div>
- </div>
 </template>
 
 <script>
@@ -31,29 +24,26 @@ import ListHeader from './ListHeader.vue'
 import ListFooter from './ListFooter.vue'
 import draggable from 'vuedraggable'
 import axios from 'axios';
-import {RotateSquare2} from 'vue-loading-spinner'
-import { deleteTask, getReferenceId, updateTask } from '@/helpers/utils';
+import { deleteList, deleteTask, getReferenceId, updateTask } from '@/helpers/utils';
 
 export default {
   components: {
     ListItem,
     ListHeader,
     ListFooter,
-    draggable,
-    RotateSquare2
+    draggable
   },
   name: 'List',
   data() {
     return {
       loaded: false,
-      debug: true,
       componentListItem: 0,
       newTask: '',
       idForTask: 4,
       currentCategory: 0,
       currentListId: 0,
       beforeEditCache: '',
-      showCompletedTasks: true,
+      showCompletedTasks: false,
       lists: [],
       categories: [],
       tasks: [],
@@ -136,11 +126,32 @@ export default {
           console.log(error);
       })
     },
+    addList(name) {
+      axios.post(`/.netlify/functions/create-list`, {
+          name: name,
+      })
+      .then(response => {
+        this.lists.push(response.data)
+      })
+      .catch(function (error) {
+          console.log(error);
+      })
+    },
     removeTask(id) {
       let index = this.tasks.map(item => item.ref['@ref'].id).indexOf(id)
       // Delete Task in DB
       deleteTask(id)
       this.tasks.splice(index, 1)
+    },
+    removeList(id, index) {
+      // delete all tasks from removed list
+      let removeTasks = this.tasks.filter(task => task.data.list == getReferenceId(this.lists[index]))
+      removeTasks.forEach(task => {
+        console.log("delete" + task.ref['@ref'].id)
+        deleteTask(task.ref['@ref'].id)
+      });
+      deleteList(id)
+      this.lists.splice(index, 1)
     },
     finishedEdit(data) {
       console.log(data.id)
@@ -165,16 +176,6 @@ export default {
 </script>
 
 <style lang='scss'>
- .loader {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transform: -webkit-translate(-50%, -50%);
-    transform: -moz-translate(-50%, -50%);
-    transform: -ms-translate(-50%, -50%);
-    color:darkred;
-  }
 .list-content {
   padding: 0 15px 15px;
   .completed {

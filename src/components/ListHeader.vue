@@ -8,22 +8,44 @@
         </ul>
       </div>
     </nav>
-    <i class="material-icons list-header-nav-sync-icon" @click="refreshData">sync</i>
-  </div>
-    <div class="list-header-nav-filter">
-      <div class="list-header-selected-category">
-        <span class="list-header-selected-category-label" v-if="selectedCategory" @click="removeCategory">{{ selectedCategory }} <span class="list-header-selected-category-remove">x</span></span>
-      </div>
       <div class="list-header-nav-filter-dropdown">
-        <i class="material-icons list-header-nav-filter-dropdown-icon" @click="showCategoryDropdown=!showCategoryDropdown">filter_list</i>
-        <ul class="list-header-nav-filter-dropdown-content" v-if="showCategoryDropdown">
-          <li v-for="(category, index)  in categories" :key="index"><a href="#" @click="selectCategory(index)">{{ category.data.name }}</a></li>
+        <i class="material-icons list-header-nav-filter-dropdown-menu-icon" @click="showMenuDropdown=!showMenuDropdown">settings</i>
+        <ul class="list-header-nav-filter-dropdown-content" v-if="showMenuDropdown">
+          <li @click="showModal = true"><i class="material-icons list-header-nav-icon" >edit</i>Lists</li>
+          <li @click="refreshData"><i class="material-icons list-header-nav-icon" >edit</i>Categories</li>
+          <li @click="refreshData"><i class="material-icons list-header-nav-icon" >sync</i>Refresh</li>
+          <li @click="logout"><i class="material-icons list-header-nav-icon">exit_to_app</i>Log Out</li>
         </ul>
       </div>
+  </div>
+  <div class="list-header-nav-filter">
+    <div class="list-header-selected-category">
+      <span class="list-header-selected-category-label" v-if="selectedCategory" @click="removeCategory">{{ selectedCategory }} <span class="list-header-selected-category-remove">x</span></span>
     </div>
+    <div class="list-header-nav-filter-dropdown">
+      <i class="material-icons list-header-nav-filter-dropdown-icon" @click="showCategoryDropdown=!showCategoryDropdown">filter_list</i>
+      <ul class="list-header-nav-filter-dropdown-content" v-if="showCategoryDropdown">
+        <li v-for="(category, index)  in categories" :key="index"><a href="#" @click="selectCategory(index)">{{ category.data.name }}</a></li>
+      </ul>
+    </div>
+  </div>
+    <!-- overlay -->
+  <div class="list-overlay" v-if="showModal" @click="openModal = false"></div>
+
+  <!-- modal -->
+  <div class="list-modal" v-if="showModal">
+    <div class="list-modal-form">
+      <button class="list-modal-close" @click="showModal = false">x</button>
+      <h5>Edit List</h5>
+       <ul >
+          <li v-for="(list, index) in lists" :key="index">{{ list.data.name }}<span class="list-modal-form-remove" @click="removeList(list.ref['@ref'].id, index)">&times;</span></li>
+        </ul>
+      <input type="text" placeholder="Create new List" ref="input" v-model="newList">
+      <button class="btn" @click="addList" v-on:keyup.enter="addList">Add List</button>
+    </div>
+  </div>
   </header>
 </template>
-
 <script>
   import { getReferenceId } from '@/helpers/utils';
   export default {
@@ -44,18 +66,29 @@
     },
     data() {
       return {
-        newTask: '',
+        newList: '',
         showCategoryDropdown: false,
+        showMenuDropdown: false,
         selectedCategory: '',
+        showModal: false,
+        newList: '',
       }
     },
     methods: {
-      addTask() {
-        if (this.newTask.trim().length == 0) {
+      addList() {
+        if (this.newList.trim().length == 0) {
           return
         }
-        this.$emit('addedTask', this.newTask)
-        this.newTask = ''
+        this.$emit('addedList', this.newList)
+        this.newList = ''
+        this.showModal = false;
+        this.showMenuDropdown = false;
+      },
+      removeList(id, index) {
+        this.$emit('removedList', id, index)
+      },
+      logout(){
+        this.$emit('logoutUser', 'logout')
       },
       selectList(id) {
         this.$emit('selectedList', id)
@@ -119,10 +152,12 @@ header {
     &-extended {
       box-shadow: none;
     }
-    &-sync-icon {
-      margin-right: 0;
-      padding-left: 15px;
+    &-icon {
       cursor: pointer;
+      color: #FFF;
+      font-size: 16px;;
+      padding-right: 5px;
+      vertical-align: middle;
     }
     &-filter {
       display: flex;
@@ -137,6 +172,9 @@ header {
         color: #fff;
         font-size: 14px;
         display: flex;
+        &-menu-icon {
+          cursor: pointer;
+        }
         &-icon {
           margin-right: 15px;
           cursor: pointer;
@@ -146,9 +184,11 @@ header {
           min-width: 130px;
           position: absolute;
           top: 14px;
-          right: 14px;
+          right: 0;
           border-top: 1px solid #fff;
           background-color: #312c51;
+          cursor: pointer;
+          z-index: 99999;
           li {
             padding: 10px;
             border-bottom: 1px solid #9e9e9e;
@@ -187,5 +227,47 @@ header {
       }
     }
 }
+ .list-overlay {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+  }
 
+  .list-modal {
+    position:absolute;
+    top: 50px;
+    width: 300px;
+    min-height: 250px;
+    z-index: 9999;
+    margin: 0 auto;
+    background-color: #fff;
+    &-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 5px 10px;
+      background: none;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    &-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      align-items: stretch;
+      justify-content: space-between;
+      min-height: 250px; 
+      &-remove {
+        padding: 0 5px;
+        cursor: pointer;
+      }
+    }
+    }
 </style>

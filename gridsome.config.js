@@ -5,12 +5,11 @@
 // To restart press CTRL + C in terminal and run `gridsome develop`
 
 module.exports = {
-  siteName: "Gridsome",
+  siteName: "The List",
   plugins: [
     {
       use: "gridsome-plugin-pwa",
       options: {
-        title: "The List",
         startUrl: "/",
         display: "standalone",
         statusBarStyle: "default",
