@@ -113,6 +113,7 @@
     align-items: center;
     justify-content: stretch;
     label {
+      padding-top: 2px;
       padding-left: 5px;
     }
     [type="checkbox"]+span:not(.lever) {

@@ -40,8 +40,8 @@
        <ul >
           <li v-for="(list, index) in modalData" :key="index">{{ list.data.name }}<span class="list-modal-form-remove" @click="removeItem(list.ref['@ref'].id, index)">&times;</span></li>
         </ul>
-      <input type="text" placeholder="Create new List" ref="input" v-model="newItem" v-on:keyup.enter="addItem">
-      <button class="btn" @click="addItem">Add List</button>
+      <input type="text" :placeholder="'Create new ' + modalType" ref="input" v-model="newItem" v-on:keyup.enter="addItem">
+      <button class="btn" @click="addItem">Add {{modalType}}</button>
     </div>
   </div>
   </header>
@@ -79,11 +79,11 @@
       openModal(type) {
         if (type == 'lists') {
           this.modalData = this.lists
-          this.modalType = "Lists"
+          this.modalType = "List"
         }
         else if (type == 'categories') {
           this.modalData = this.categories
-          this.modalType = "Categories"
+          this.modalType = "Category"
         }     
         this.newItem = ''
         this.showModal = true
@@ -94,20 +94,20 @@
         if (this.newItem.trim().length == 0) {
           return
         }
-        if (this.modalType == 'Lists') {
+        if (this.modalType == 'List') {
           this.$emit('addedList', this.newItem)
         }
-        else if (this.modalType == 'Categories') {
+        else if (this.modalType == 'Category') {
           this.$emit('addedCategory', this.newItem)
         }
         this.newItem = ''
         this.showModal = false;
       },
       removeItem(id, index) {
-        if (this.modalType == 'Lists') {
+        if (this.modalType == 'List') {
           this.$emit('removedList', id, index)
         }
-        else if (this.modalType == 'Categories') {
+        else if (this.modalType == 'Category') {
           this.$emit('removedCategory', id, index)
         }
       },
@@ -253,7 +253,7 @@ header {
 }
  .list-overlay {
     position: fixed;
-    z-index: 9998;
+    z-index: 88;
     top: 0;
     left: 0;
     width: 100%;
@@ -265,8 +265,10 @@ header {
     position:absolute;
     top: 50px;
     width: 300px;
+    left: 15%;
+    right: 15%;
     min-height: 250px;
-    z-index: 9999;
+    z-index: 89;
     margin: 0 auto;
     background-color: #fff;
     &-close {
@@ -293,5 +295,5 @@ header {
         cursor: pointer;
       }
     }
-    }
+  }
 </style>
