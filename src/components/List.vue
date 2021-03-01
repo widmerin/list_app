@@ -14,7 +14,7 @@
         <list-item v-if="showCompletedTasks" v-for="(task, index) in tasksFilteredCompleted" :key="componentListItem + task.ref['@ref'].id" :task="task" :categories="categories"  :index="index" @removedTask="removeTask" @finishedEdit="finishedEdit"></list-item >
       </div>
     </div>
-    <list-footer @addedTask="addTask" :categories="categories"></list-footer>
+    <list-footer @addedTask="addTask" :categories="categories" :suggestions="getSuggestions"></list-footer>
   </div>
 </template>
 
@@ -60,7 +60,16 @@ export default {
     },
     tasksFilteredCompleted() {
         return this.filterTasksCurrentList(this.filterTasksCompleted(this.tasks))
-    }
+    },
+    getSuggestions() {
+      let suggestions = []
+      this.tasksFilteredCompleted.forEach(task => {
+        if(!suggestions.includes(task.data.title)){
+          suggestions.push(task.data.title)
+        }
+      })
+      return suggestions
+    },
   },
   created() {
     this.loaded = true

@@ -9,8 +9,9 @@
     <div class="list-footer-modal-form">
       <button class="list-footer-modal-close" @click="closeModal()">x</button>
       <h5>New Task</h5>
-      <input type="text" placeholder="Task" ref="input" class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask">
-      <select class="list-footer-modal-category" v-model="newCategory" placeholder="Add Task..." >
+      <autocomplete :items="suggestions" @inputSearch="input"/>
+    <!--  <input type="text" placeholder="Task" ref="input" class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask">-->
+      <select class="list-footer-modal-category" v-model="newCategory" placeholder="Add Task..." v-on:keyup.enter="addTask">
         <option value="" disabled selected>-- Category --</option>
         <option v-for="(category, index) in categories" v-bind:value="category.ref['@ref'].id" :key="index">
           {{ category.data.name }}
@@ -24,10 +25,19 @@
 </template>
 
 <script>
+  import autocomplete from './Autocomplete.vue'
+
   export default {
     name: 'list-footer',
+    components: {
+      autocomplete
+    },
     props: {
       categories: {
+        type: Array,
+        required: true,
+      },
+      suggestions: {
         type: Array,
         required: true,
       },
@@ -44,10 +54,6 @@
         this.showModal = true
         this.newTask = ''
         this.newCategory = ''
-        // auto focus
-        this.$nextTick(function () {
-            this.$refs.input.focus()
-        })
       },
       closeModal() {
         this.showModal = false
@@ -61,7 +67,9 @@
         this.newCategory = ''
         this.showModal = false;
       },
-     
+      input(value) {
+        this.newTask = value
+      }
     }
   }
 </script>
