@@ -1,94 +1,123 @@
 <template>
-  <div class="list-item" >
-      <div class="list-item-label">
-        <label>
-          <input type="checkbox"  v-model="completed" @change="doneEdit"  /><span></span>
-        </label>
-          <span v-if="!editing" @click="editTask" :class="{ completed : completed }">{{ task.data.title }}</span>
-          <input v-else class="list-item-edit" type="text" v-model="title" @blur="doneEdit" @keyup.enter="doneEdit" @keyup.esc="cancelEdit" v-focus>
-      </div>
-      <select class="list-item-category-select" v-model="category" @change="doneEdit" dir="rtl">
-        <option selected value=""></option>
-        <option v-for="(category, index) in categories" v-bind:value="category.ref['@ref'].id" :key="index">
-          {{ category.data.name }}
-        </option>
-      </select>
-      <div class="list-item-remove" @click="removeTask">&times;</div>
+  <div class="list-item">
+    <div class="list-item-label">
+      <label>
+        <input
+          type="checkbox"
+          v-model="completed"
+          @change="doneEdit"
+        /><span></span>
+      </label>
+      <span
+        v-if="!editing"
+        @click="editTask"
+        :class="{ completed: completed }"
+        >{{ task.data.title }}</span
+      >
+      <input
+        v-else
+        class="list-item-edit"
+        type="text"
+        v-model="title"
+        @blur="doneEdit"
+        @keyup.enter="doneEdit"
+        @keyup.esc="cancelEdit"
+        v-focus
+      />
+    </div>
+    <select
+      class="list-item-category-select"
+      v-model="category"
+      @change="doneEdit"
+      dir="rtl"
+    >
+      <option selected value=""></option>
+      <option
+        v-for="(category, index) in categories"
+        v-bind:value="category.ref['@ref'].id"
+        :key="index"
+      >
+        {{ category.data.name }}
+      </option>
+    </select>
+    <div class="list-item-remove" @click="removeTask">&times;</div>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'list-item',
-    props: {
-      task: {
-        type: Object,
-        required: true,
-      },
-      index: {
-        type: Number,
-        required: true,
-      },
-      categories: {
-        type: Array
-      }
+export default {
+  name: "list-item",
+  props: {
+    task: {
+      type: Object,
+      required: true,
     },
-    data() {
-      return {
-        'id': this.task.ref['@ref'].id,
-        'title': this.task.data.title,
-        'completed': this.task.data.completed,
-        'editing': this.task.data.editing,
-        'category': this.task.data.category,
-        'beforeEditCache': '',
-        'editCategory': false
-      }
+    index: {
+      type: Number,
+      required: true,
     },
-    directives: {
-      focus: {
-        inserted: function (el) {
-          el.focus()
+    categories: {
+      type: Array,
+    },
+  },
+  data() {
+    return {
+      id: this.task.ref["@ref"].id,
+      title: this.task.data.title,
+      completed: this.task.data.completed,
+      editing: this.task.data.editing,
+      category: this.task.data.category,
+      beforeEditCache: "",
+      editCategory: false,
+    };
+  },
+  directives: {
+    focus: {
+      inserted: function (el) {
+        el.focus();
+      },
+    },
+  },
+  methods: {
+    cancelEdit() {
+      this.editing = false;
+      this.title = this.beforeEditCache;
+    },
+    doneEdit() {
+      if (this.title.trim() == "") {
+        this.title = this.beforeEditCache;
+      }
+      this.editing = false;
+      this.editCategory = false;
+      this.$emit("finishedEdit", {
+        task: {
+          title: this.title,
+          completed: this.completed,
+          editing: this.editing,
+          category: this.category,
+        },
+        id: this.id,
+      });
+    },
+    editTask() {
+      this.beforeEditCache = this.title;
+      this.editing = true;
+    },
+    getCategoryName(id) {
+      if (id != 0) {
+        const categories = this.categories.filter(
+          (category) => category.ref["@ref"].id == id
+        );
+        if (categories[0]) {
+          return categories[0].data.name;
         }
       }
     },
-    methods: {
-      cancelEdit() {
-        this.editing = false
-        this.title = this.beforeEditCache
-      },
-      doneEdit() {
-        if (this.title.trim() == '') {
-          this.title = this.beforeEditCache
-        }
-        this.editing = false
-        this.editCategory = false
-        this.$emit('finishedEdit', {
-          'task': {
-            'title': this.title,
-            'completed': this.completed,
-            'editing': this.editing,
-            'category': this.category,
-          },
-          'id': this.id,
-        })
-      },
-      editTask() {
-        this.beforeEditCache = this.title
-        this.editing = true
-      },
-      getCategoryName(id) {
-        if (id != 0) {
-          const categories = this.categories.filter(category => category.ref['@ref'].id == id)
-          if(categories[0]) {
-            return categories[0].data.name
-          }
-        }
-      },
-      removeTask() {
-        this.$emit('removedTask', this.id)
-      }
-    }
-  }
+    removeTask() {
+      this.$emit("removedTask", this.id);
+    },
+  },
+};
 </script>
 
 <style lang='scss'>
@@ -114,7 +143,7 @@
       padding-top: 2px;
       padding-left: 5px;
     }
-    [type="checkbox"]+span:not(.lever) {
+    [type="checkbox"] + span:not(.lever) {
       padding-left: 30px;
     }
   }
@@ -137,22 +166,21 @@
       -webkit-appearance: none;
       -moz-appearance: none;
       text-indent: 1px;
-      text-overflow: '';
+      text-overflow: "";
     }
   }
   &-remove {
     cursor: pointer;
-    padding:  5px;
+    padding: 5px;
   }
-
 }
-  .tasks-active {
-    .list-item {
-      .list-item-label {
-        [type="checkbox"]+span:not(.lever):before{
-          top:2px;
-        }
+.tasks-active {
+  .list-item {
+    .list-item-label {
+      [type="checkbox"] + span:not(.lever):before {
+        top: 2px;
       }
     }
   }
+}
 </style>

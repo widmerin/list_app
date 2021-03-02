@@ -1,76 +1,96 @@
 <template>
   <div class="list-footer">
     <!-- overlay -->
-    <div class="list-footer-overlay" v-if="showModal" @click="closeModal()"></div>
+    <div
+      class="list-footer-overlay"
+      v-if="showModal"
+      @click="closeModal()"
+    ></div>
 
     <!-- modal -->
     <div class="list-footer-modal" v-if="showModal">
       <div class="list-footer-modal-form">
         <button class="list-footer-modal-close" @click="closeModal()">x</button>
         <h5>New Task</h5>
-        <autocomplete :items="suggestions" @inputSearch="input"/>
-      <!--  <input type="text" placeholder="Task" ref="input" class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask">-->
-        <select class="list-footer-modal-category" v-model="newCategory" placeholder="Add Task..." v-on:keyup.enter="addTask">
+        <autocomplete :items="suggestions" @inputSearch="input" />
+        <!--  <input type="text" placeholder="Task" ref="input" class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask">-->
+        <select
+          class="list-footer-modal-category"
+          v-model="newCategory"
+          placeholder="Add Task..."
+          v-on:keyup.enter="addTask"
+        >
           <option value="" disabled selected>-- Category --</option>
-          <option v-for="(category, index) in categories" v-bind:value="category.ref['@ref'].id" :key="index">
+          <option
+            v-for="(category, index) in categories"
+            v-bind:value="category.ref['@ref'].id"
+            :key="index"
+          >
             {{ category.data.name }}
           </option>
         </select>
-        <button class="waves-effect waves-light btn" @click="addTask">Add Task</button>
+        <button class="waves-effect waves-light btn" @click="addTask">
+          Add Task
+        </button>
       </div>
     </div>
-    <button class="waves-effect waves-light btn list-footer-add-btn" @click="openModal()">+</button>
+    <button
+      class="waves-effect waves-light btn list-footer-add-btn"
+      @click="openModal()"
+    >
+      +
+    </button>
   </div>
 </template>
 
 <script>
-  import autocomplete from './Autocomplete.vue'
+import autocomplete from "./Autocomplete.vue";
 
-  export default {
-    name: 'list-footer',
-    components: {
-      autocomplete
+export default {
+  name: "list-footer",
+  components: {
+    autocomplete,
+  },
+  props: {
+    categories: {
+      type: Array,
+      required: true,
     },
-    props: {
-      categories: {
-        type: Array,
-        required: true,
-      },
-      suggestions: {
-        type: Array,
-        required: true,
-      },
+    suggestions: {
+      type: Array,
+      required: true,
     },
-    data() {
-      return {
-        newTask: '',
-        newCategory: '',
-        showModal: false,
+  },
+  data() {
+    return {
+      newTask: "",
+      newCategory: "",
+      showModal: false,
+    };
+  },
+  methods: {
+    openModal() {
+      this.showModal = true;
+      this.newTask = "";
+      this.newCategory = "";
+    },
+    closeModal() {
+      this.showModal = false;
+    },
+    addTask() {
+      if (this.newTask.trim().length == 0) {
+        return;
       }
+      this.$emit("addedTask", this.newTask, this.newCategory);
+      this.newTask = "";
+      this.newCategory = "";
+      this.showModal = false;
     },
-    methods: {
-      openModal() {
-        this.showModal = true
-        this.newTask = ''
-        this.newCategory = ''
-      },
-      closeModal() {
-        this.showModal = false
-      },
-      addTask() {
-        if (this.newTask.trim().length == 0) {
-          return
-        }
-        this.$emit('addedTask', this.newTask, this.newCategory)
-        this.newTask = ''
-        this.newCategory = ''
-        this.showModal = false;
-      },
-      input(value) {
-        this.newTask = value
-      }
-    }
-  }
+    input(value) {
+      this.newTask = value;
+    },
+  },
+};
 </script>
 
 <style lang='scss'>
@@ -102,11 +122,11 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, .5);
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   &-modal {
-    position:absolute;
+    position: absolute;
     top: 50px;
     width: 300px;
     min-height: 250px;
@@ -134,13 +154,13 @@
       padding: 15px;
       align-items: stretch;
       justify-content: space-between;
-      height: 250px; 
+      height: 250px;
     }
-    input[type=text],
+    input[type="text"],
     select {
-    box-sizing: border-box;
-    padding-left: 10px;
-    border: 1px solid;
+      box-sizing: border-box;
+      padding-left: 10px;
+      border: 1px solid;
       &:focus {
         border: 2px solid #26a69a;
       }
