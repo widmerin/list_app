@@ -1,5 +1,4 @@
 <template>
-<!--v-if="filterCategory === 0 || filterCategory == category" -->
   <div class="list-item" >
       <div class="list-item-label">
         <label>
@@ -7,7 +6,6 @@
         </label>
           <span v-if="!editing" @click="editTask" :class="{ completed : completed }">{{ task.data.title }}</span>
           <input v-else class="list-item-edit" type="text" v-model="title" @blur="doneEdit" @keyup.enter="doneEdit" @keyup.esc="cancelEdit" v-focus>
-
       </div>
       <select class="list-item-category-select" v-model="category" @change="doneEdit" dir="rtl">
         <option selected value=""></option>
@@ -79,13 +77,13 @@
         this.editing = true
       },
       getCategoryName(id) {
-      if (id != 0) {
-        const categories = this.categories.filter(category => category.ref['@ref'].id == id)
-        if(categories[0]) {
-          return categories[0].data.name
+        if (id != 0) {
+          const categories = this.categories.filter(category => category.ref['@ref'].id == id)
+          if(categories[0]) {
+            return categories[0].data.name
+          }
         }
-      }
-    },
+      },
       removeTask() {
         this.$emit('removedTask', this.id)
       }

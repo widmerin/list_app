@@ -8,15 +8,15 @@
         </ul>
       </div>
     </nav>
-      <div class="list-header-nav-filter-dropdown">
-        <i class="material-icons list-header-nav-filter-dropdown-menu-icon" @click="showMenuDropdown=!showMenuDropdown">settings</i>
-        <ul class="list-header-nav-filter-dropdown-content" v-if="showMenuDropdown">
-          <li @click="openModal('lists')"><i class="material-icons list-header-nav-icon" >edit</i>Lists</li>
-          <li @click="openModal('categories')"><i class="material-icons list-header-nav-icon" >edit</i>Categories</li>
-          <li @click="refreshData"><i class="material-icons list-header-nav-icon" >sync</i>Refresh</li>
-          <li @click="logout"><i class="material-icons list-header-nav-icon">exit_to_app</i>Log Out</li>
-        </ul>
-      </div>
+    <div class="list-header-nav-filter-dropdown">
+      <i class="material-icons list-header-nav-filter-dropdown-menu-icon" @click="showMenuDropdown=!showMenuDropdown">settings</i>
+      <ul class="list-header-nav-filter-dropdown-content" v-if="showMenuDropdown">
+        <li @click="openModal('lists')"><i class="material-icons list-header-nav-icon" >edit</i>Lists</li>
+        <li @click="openModal('categories')"><i class="material-icons list-header-nav-icon" >edit</i>Categories</li>
+        <li @click="refreshData"><i class="material-icons list-header-nav-icon" >sync</i>Refresh</li>
+        <li @click="logout"><i class="material-icons list-header-nav-icon">exit_to_app</i>Log Out</li>
+      </ul>
+    </div>
   </div>
   <div class="list-header-nav-filter">
     <div class="list-header-selected-category">
@@ -29,7 +29,8 @@
       </ul>
     </div>
   </div>
-    <!-- overlay -->
+  
+  <!-- overlay -->
   <div class="list-overlay" v-if="showModal" @click="openModal = false"></div>
 
   <!-- modal -->
@@ -37,9 +38,9 @@
     <div class="list-modal-form">
       <button class="list-modal-close" @click="showModal = false">x</button>
       <h5>Edit {{modalType}}</h5>
-       <ul >
-          <li v-for="(list, index) in modalData" :key="index">{{ list.data.name }}<span class="list-modal-form-remove" @click="removeItem(list.ref['@ref'].id, index)">&times;</span></li>
-        </ul>
+      <ul >
+        <li v-for="(list, index) in modalData" :key="index">{{ list.data.name }}<span class="list-modal-form-remove" @click="removeItem(list.ref['@ref'].id, index)">&times;</span></li>
+      </ul>
       <input type="text" :placeholder="'Create new ' + modalType" ref="input" v-model="newItem" v-on:keyup.enter="addItem">
       <button class="btn" @click="addItem">Add {{modalType}}</button>
     </div>
