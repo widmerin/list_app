@@ -76,8 +76,7 @@
     <!-- modal -->
     <div class="list-modal" v-if="showModal">
       <div class="list-modal-form">
-        <button class="list-modal-close" @click="showModal = false">x</button>
-        <h5>Edit {{ modalType }}</h5>
+        <h5>Edit {{ modalType }}</h5><button class="list-modal-close" @click="showModal = false">x</button>
         <ul>
           <li v-for="(list, index) in modalData" :key="index">
             {{ list.data.name
@@ -317,13 +316,9 @@ header {
 .list-modal {
   position: absolute;
   top: 50px;
-  width: 300px;
-  left: 15%;
-  right: 15%;
+  width: 100%;
   min-height: 250px;
   z-index: 89;
-  margin: 0 auto;
-  background-color: #fff;
   &-close {
     position: absolute;
     top: 10px;
@@ -343,6 +338,10 @@ header {
     align-items: stretch;
     justify-content: space-between;
     min-height: 250px;
+    margin: 0 auto;
+    background-color: #fff;
+    width: 300px;
+    position: relative;
     &-remove {
       padding: 0 5px;
       cursor: pointer;
