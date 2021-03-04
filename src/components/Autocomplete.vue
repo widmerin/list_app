@@ -43,7 +43,7 @@ export default {
     filterResults() {
       // first uncapitalize all the things
       this.results = this.items.filter((item) => {
-        return item.toLowerCase().indexOf(this.search.toLowerCase()) > -1;
+        return item.toLowerCase().startsWith(this.search.toLowerCase());
       });
     },
     setResult(result) {
@@ -103,6 +103,7 @@ export default {
       type="text"
       ref="input"
       @input="onChange"
+      @click="isOpen = !isOpen"
       v-model="search"
       @keydown.down="onArrowDown"
       @keydown.up="onArrowUp"
