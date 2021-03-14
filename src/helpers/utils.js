@@ -3,24 +3,54 @@ const supabaseUrl = process.env.GRIDSOME_API_URL
 const supabaseKey = process.env.GRIDSOME_APP_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-
-/**
- *  Add a new task to supabase
- */
- async function createTask(task) {
+async function createCategory(category) {
   try {
     const { data, error } = await supabase
-      .from('Tasks')
-      .insert(task)
+      .from('Categories')
+      .insert(category)
 
     if (error) {
-      alert(error.message)
       console.error('There was an error inserting', error)
       return null
     }
     return data
   } catch (err) {
     alert('Error')
+    console.error('Unknown problem inserting to db', err)
+    return null
+  }
+}
+
+async function createList(list) {
+  try {
+    const { data, error } = await supabase
+      .from('Lists')
+      .insert(list)
+
+    if (error) {
+      console.error('There was an error inserting', error)
+      return null
+    }
+    return data
+  } catch (err) {
+    alert('Error')
+    console.error('Unknown problem inserting to db', err)
+    return null
+  }
+}
+
+async function createTask(task) {
+  try {
+    const { data, error } = await supabase
+      .from('Tasks')
+      .insert(task)
+
+    if (error) {
+      console.error('There was an error inserting', error)
+      return null
+    }
+    return data
+  } catch (err) {
     console.error('Unknown problem inserting to db', err)
     return null
   }
@@ -48,6 +78,20 @@ async function updateTask(task) {
   .eq('id', task.id)
 }
 
+async function deleteCategory(id) {
+  const { data, error } = await supabase
+  .from('Categories')
+  .delete()
+  .eq('id', id)
+}
+
+async function deleteList(id) {
+  const { data, error } = await supabase
+  .from('Lists')
+  .delete()
+  .eq('id', id)
+}
+
 async function deleteTask(id) {
   const { data, error } = await supabase
   .from('Tasks')
@@ -55,4 +99,4 @@ async function deleteTask(id) {
   .eq('id', id)
 }
 
-export { createTask, getCategories, deleteTask, getLists, getTasks, updateTask }
+export { createCategory, createList, createTask, getCategories, deleteCategory, deleteList, deleteTask, getLists, getTasks, updateTask }

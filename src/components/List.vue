@@ -83,7 +83,11 @@ const supabaseKey = process.env.GRIDSOME_APP_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
  
 import {
+  createCategory,
+  createList,
   createTask,
+  deleteCategory,
+  deleteList,
   deleteTask,
   getCategories,
   getLists,
@@ -182,6 +186,22 @@ export default {
       }
       this.forceRerender();
     },
+    async addCategory(name) {
+      const data = {
+          name: name,
+      }
+      const newCategory = await createCategory(data)
+      this.categories.push(newCategory[0])
+    },
+
+    async addList(name) {
+      const data = {
+        name: name,
+      }
+      const newList = await createList(data)
+      this.lists.push(newList[0])
+    },
+
     async addTask(title, category) {
       const data = {
           title: title,
@@ -201,7 +221,7 @@ export default {
     removeList(id, index) {
       // delete all tasks from removed list
       let removeTasks = this.tasks.filter(
-        (task) => task.data.list == this.lists[index].id
+        (task) => task.list == id
       );
       removeTasks.forEach((task) => {
         console.log("delete" + task.id);
