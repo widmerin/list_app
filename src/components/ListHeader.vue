@@ -7,9 +7,9 @@
             <li class="tab" v-for="(list, index) in lists" :key="index">
               <a
                 href="#"
-                v-bind:class="{ active: index == currentListId }"
-                @click="selectList(index)"
-                >{{ list.data.name }}</a
+                v-bind:class="{ active: list.id == currentListId }"
+                @click="selectList(list.id)"
+                >{{ list.name }}</a
               >
             </li>
           </ul>
@@ -62,8 +62,8 @@
           v-if="showCategoryDropdown"
         >
           <li v-for="(category, index) in categories" :key="index">
-            <a href="#" @click="selectCategory(index)">{{
-              category.data.name
+            <a href="#" @click="selectCategory(category.id)">{{
+              category.name
             }}</a>
           </li>
         </ul>
@@ -79,10 +79,10 @@
         <h5>Edit {{ modalType }}</h5><button class="list-modal-close" @click="showModal = false">x</button>
         <ul>
           <li v-for="(list, index) in modalData" :key="index">
-            {{ list.data.name
+            {{ list.name
             }}<span
               class="list-modal-form-remove"
-              @click="removeItem(list.ref['@ref'].id, index)"
+              @click="removeItem(list.id, index)"
               >&times;</span
             >
           </li>
@@ -170,13 +170,16 @@ export default {
     selectCategory(id) {
       this.showCategoryDropdown = false;
       this.selectedCategory = this.getCategoryName(id);
-      this.$emit("selectedCategory", getReferenceId(this.categories[id]));
+      this.$emit("selectedCategory", id);
     },
     refreshData() {
       this.$emit("refreshedData");
     },
     getCategoryName(id) {
-      return this.categories[id].data.name;
+      let category =  this.categories.filter(x => x.id == id);
+      if (category) {
+        return category[0].name
+      }
     },
     removeCategory() {
       this.selectedCategory = "";

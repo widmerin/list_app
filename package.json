@@ -7,6 +7,7 @@
     "explore": "gridsome explore"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^1.6.0",
     "axios": "^0.21.1",
     "faunadb": "^4.0.2",
     "gridsome": "^0.7.0",
@@ -15,6 +16,7 @@
     "materialize-css": "^1.0.0-rc.2",
     "netlify": "^6.1.7",
     "netlify-identity-widget": "^1.9.1",
+    "npm": "^7.6.3",
     "register-service-worker": "^1.7.2",
     "vue-loading-spinner": "^1.0.11",
     "vuedraggable": "^2.24.3",
