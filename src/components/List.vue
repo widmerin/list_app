@@ -115,41 +115,10 @@ export default {
     };
   },
   mounted() {
-    supabase
-      .from('Tasks')
-      .on('INSERT', payload => {
-        console.log('Change received!', payload)
-        this.tasks.push(payload.new)
-
-      })
-      .subscribe()
-      supabase
-        .from('Tasks')
-        .on('UPDATE', payload => {
-          console.log('Change received!', payload)
-          let index = this.tasks.map((item) => item.id).indexOf(payload.new.id)
-          this.tasks[index].title = payload.new.title
-          this.tasks[index].category = payload.new.category
-          this.tasks[index].completed = payload.new.completed
-
-        console.log("updated index" +index)
-          this.forceRerender()
-        })
-        .subscribe()
-
-      supabase
-      .from('Tasks')
-      .on('DELETE', payload => {
-        console.log('Change received!', payload)
-        let index = this.tasks.map((item) => item.id).indexOf(payload.old.id)
-        this.tasks.splice(index, 1);
-
-      })
-      .subscribe()
-
-
-    },
-      
+    this.supscripeTaskUpdate()
+    this.subscribeTaskInsert()
+    this.subscribeTaskDelete()
+  },
   computed: {
     tasksFilteredActive: {
       get() {
@@ -173,13 +142,13 @@ export default {
   },
   async created() {
     this.loaded = true;
-    this.lists = await getLists()
-    this.categories = await getCategories()
-    this.tasks = await getTasks()  
+    this.fetchData()
   },
   methods: {
-        fetchData(){
-     
+    async fetchData(){
+      this.lists = await getLists()
+      this.categories = await getCategories()
+      this.tasks = await getTasks()  
     },
     filterTasksByCategory: function (tasks) {
       if (this.currentCategory != 0) {
@@ -224,30 +193,7 @@ export default {
       const task = await createTask(data)
 
     },
-    addList(name) {
-      axios
-        .post(`/.netlify/functions/create-list`, {
-          name: name,
-        })
-        .then((response) => {
-          this.lists.push(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
-    addCategory(name) {
-      axios
-        .post(`/.netlify/functions/create-category`, {
-          name: name,
-        })
-        .then((response) => {
-          this.categories.push(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
+
     removeTask(id) {
       // Delete Task in DB
       deleteTask(id);
@@ -270,8 +216,6 @@ export default {
       this.categories.splice(index, 1);
     },
     finishedEdit(data) {
-
-
       // Update Task in DB
       updateTask(data.task);
     },
@@ -281,6 +225,34 @@ export default {
     },
     logout() {
       this.$emit("logout", "logout");
+    },
+    supscripeTaskUpdate() {
+      supabase
+        .from('Tasks')
+        .on('UPDATE', payload => {
+          let index = this.tasks.map((item) => item.id).indexOf(payload.new.id)
+          this.tasks[index].title = payload.new.title
+          this.tasks[index].category = payload.new.category
+          this.tasks[index].completed = payload.new.completed
+        })
+        .subscribe()
+    },
+    subscribeTaskInsert() {
+      supabase
+        .from('Tasks')
+        .on('INSERT', payload => {
+          this.tasks.push(payload.new)
+        })
+        .subscribe()
+    },
+    subscribeTaskDelete() {
+      supabase
+        .from('Tasks')
+        .on('DELETE', payload => {
+          let index = this.tasks.map((item) => item.id).indexOf(payload.old.id)
+          this.tasks.splice(index, 1);
+        })
+        .subscribe()
     },
   },
 };

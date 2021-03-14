@@ -174,6 +174,8 @@ export default {
     },
     refreshData() {
       this.$emit("refreshedData");
+      this.showMenuDropdown = false;
+
     },
     getCategoryName(id) {
       let category =  this.categories.filter(x => x.id == id);
