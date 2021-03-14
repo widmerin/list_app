@@ -216,11 +216,11 @@ export default {
     async addTask(title, category) {
       const data = {
           title: title,
-          category: category ? category : NULL,
           list: this.currentListId,
           completed: false,
+          category: category ? category : null
       }
-
+  
       const task = await createTask(data)
 
     },
@@ -259,7 +259,7 @@ export default {
       );
       removeTasks.forEach((task) => {
         console.log("delete" + task.id);
-       // deleteTask(task.id);
+        deleteTask(task.id);
       });
       deleteList(id);
       this.lists.splice(index, 1);
