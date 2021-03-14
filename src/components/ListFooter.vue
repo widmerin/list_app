@@ -23,7 +23,7 @@
           <option value="" disabled selected>-- Category --</option>
           <option
             v-for="(category, index) in categories"
-            v-bind:value="category.ref['@ref'].id"
+            v-bind:value="category.id"
             :key="index"
           >
             {{ category.data.name }}

@@ -9,7 +9,7 @@
                 href="#"
                 v-bind:class="{ active: index == currentListId }"
                 @click="selectList(index)"
-                >{{ list.data.name }}</a
+                >{{ list.name }}</a
               >
             </li>
           </ul>
@@ -63,7 +63,7 @@
         >
           <li v-for="(category, index) in categories" :key="index">
             <a href="#" @click="selectCategory(index)">{{
-              category.data.name
+              category.name
             }}</a>
           </li>
         </ul>
@@ -79,10 +79,10 @@
         <h5>Edit {{ modalType }}</h5><button class="list-modal-close" @click="showModal = false">x</button>
         <ul>
           <li v-for="(list, index) in modalData" :key="index">
-            {{ list.data.name
+            {{ list.name
             }}<span
               class="list-modal-form-remove"
-              @click="removeItem(list.ref['@ref'].id, index)"
+              @click="removeItem(list.id, index)"
               >&times;</span
             >
           </li>
@@ -176,7 +176,7 @@ export default {
       this.$emit("refreshedData");
     },
     getCategoryName(id) {
-      return this.categories[id].data.name;
+      return this.categories[id].name;
     },
     removeCategory() {
       this.selectedCategory = "";

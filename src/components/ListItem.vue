@@ -12,7 +12,7 @@
         v-if="!editing"
         @click="editTask"
         :class="{ completed: completed }"
-        >{{ task.data.title }}</span
+        >{{ task.title }}</span
       >
       <input
         v-else
@@ -34,10 +34,10 @@
       <option selected value=""></option>
       <option
         v-for="(category, index) in categories"
-        v-bind:value="category.ref['@ref'].id"
+        v-bind:value="category.id"
         :key="index"
       >
-        {{ category.data.name }}
+        {{ category.name }}
       </option>
     </select>
     <div class="list-item-remove" @click="removeTask">&times;</div>
@@ -62,11 +62,11 @@ export default {
   },
   data() {
     return {
-      id: this.task.ref["@ref"].id,
-      title: this.task.data.title,
-      completed: this.task.data.completed,
-      editing: this.task.data.editing,
-      category: this.task.data.category,
+      id: this.task.id,
+      title: this.task.title,
+      completed: this.task.completed,
+      editing: this.task.editing,
+      category: this.task.category,
       beforeEditCache: "",
       editCategory: false,
     };
@@ -106,10 +106,10 @@ export default {
     getCategoryName(id) {
       if (id != 0) {
         const categories = this.categories.filter(
-          (category) => category.ref["@ref"].id == id
+          (category) => category.id == id
         );
         if (categories[0]) {
-          return categories[0].data.name;
+          return categories[0].name;
         }
       }
     },

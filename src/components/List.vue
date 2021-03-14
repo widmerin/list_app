@@ -22,7 +22,7 @@
         >
           <list-item
             v-for="(task, index) in tasksFilteredActive"
-            :key="componentListItem + task.ref['@ref'].id"
+            :key="componentListItem + task.id"
             :task="task"
             :categories="categories"
             :index="index"
@@ -33,9 +33,7 @@
       </div>
       <div
         class="list-content-tasks-completed"
-        v-if="
-          this.tasks && tasksFilteredCompleted && tasksFilteredCompleted.length
-        "
+        v-if="this.tasks && tasksFilteredCompleted && tasksFilteredCompleted.length"
       >
         <p class="tasks-title">
           Completed Tasks
@@ -55,7 +53,7 @@
         <list-item
           v-if="showCompletedTasks"
           v-for="(task, index) in tasksFilteredCompleted"
-          :key="componentListItem + task.ref['@ref'].id"
+          :key="componentListItem + task.id"
           :task="task"
           :categories="categories"
           :index="index"
@@ -78,6 +76,12 @@ import ListHeader from "./ListHeader.vue";
 import ListFooter from "./ListFooter.vue";
 import draggable from "vuedraggable";
 import axios from "axios";
+
+import { createClient } from '@supabase/supabase-js'
+const supabaseUrl = process.env.GRIDSOME_API_URL
+const supabaseKey = process.env.GRIDSOME_APP_KEY
+const supabase = createClient(supabaseUrl, supabaseKey)
+
 import {
   deleteCategory,
   deleteList,
@@ -100,8 +104,8 @@ export default {
       componentListItem: 0,
       newTask: "",
       idForTask: 4,
-      currentCategory: 0,
-      currentListId: 0,
+      currentCategory: 1,
+      currentListId: 1,
       beforeEditCache: "",
       showCompletedTasks: false,
       lists: [],
@@ -126,47 +130,46 @@ export default {
     getSuggestions() {
       let suggestions = [];
       this.tasksFilteredCompleted.forEach((task) => {
-        if (!suggestions.includes(task.data.title)) {
-          suggestions.push(task.data.title);
+        if (!suggestions.includes(task.title)) {
+          suggestions.push(task.title);
         }
       });
       return suggestions;
     },
   },
-  created() {
+  async created() {
     this.loaded = true;
+    let { data: Lists } = await supabase.from('Lists').select('*');
+    this.lists = Lists
+    let { data: Categories } = await supabase.from('Categories').select('*');
+    this.categories = Categories
+    let { data: Tasks } = await supabase
+      .from('Tasks')
+      .select('*')
+    this.tasks = Tasks  
   },
   methods: {
-    fetchData() {
-      // Fetch data from faunaDB
-      axios
-        .get("/.netlify/functions/get-categories")
-        .then((response) => (this.categories = response.data));
-      axios
-        .get("/.netlify/functions/get-lists")
-        .then((response) => (this.lists = response.data));
-      axios
-        .get("/.netlify/functions/get-tasks")
-        .then((response) => (this.tasks = response.data));
+        fetchData(){
+     
     },
     filterTasksByCategory: function (tasks) {
       if (this.currentCategory != 0) {
         return tasks.filter(
-          (task) => task.data.category == this.currentCategory
+          (task) => task.category == this.currentCategory
         );
       }
       return tasks;
     },
     filterTasksActive: function (tasks) {
-      return tasks.filter((task) => !task.data.completed);
+      return tasks.filter((task) => !task.completed);
     },
     filterTasksCompleted: function (tasks) {
-      return tasks.filter((task) => task.data.completed);
+      return tasks.filter((task) => task.completed);
     },
     filterTasksCurrentList: function (tasks) {
       return tasks.filter(
         (task) =>
-          task.data.list == getReferenceId(this.lists[this.currentListId])
+          task.list == this.lists[this.currentListId].id
       );
     },
     forceRerender() {
@@ -187,7 +190,7 @@ export default {
       this.forceRerender();
     },
     addTask(title, category) {
-      const list = this.lists[this.currentListId].ref["@ref"].id;
+      const list = this.lists[this.currentListId].id;
       axios
         .post(`/.netlify/functions/create-task`, {
           title: title,
@@ -227,7 +230,7 @@ export default {
         });
     },
     removeTask(id) {
-      let index = this.tasks.map((item) => item.ref["@ref"].id).indexOf(id);
+      let index = this.tasks.map((item) => item.id).indexOf(id);
       // Delete Task in DB
       deleteTask(id);
       this.tasks.splice(index, 1);
@@ -235,11 +238,11 @@ export default {
     removeList(id, index) {
       // delete all tasks from removed list
       let removeTasks = this.tasks.filter(
-        (task) => task.data.list == getReferenceId(this.lists[index])
+        (task) => task.data.list == this.lists[index].id
       );
       removeTasks.forEach((task) => {
-        console.log("delete" + task.ref["@ref"].id);
-        deleteTask(task.ref["@ref"].id);
+        console.log("delete" + task.id);
+        deleteTask(task.id);
       });
       deleteList(id);
       this.lists.splice(index, 1);
@@ -252,7 +255,7 @@ export default {
     finishedEdit(data) {
       console.log(data.id);
       let index = this.tasks
-        .map((item) => item.ref["@ref"].id)
+        .map((item) => item.id)
         .indexOf(data.id);
 
       this.tasks[index].data.title = data.task.title;
