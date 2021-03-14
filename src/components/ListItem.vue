@@ -12,7 +12,7 @@
         v-if="!editing"
         @click="editTask"
         :class="{ completed: completed }"
-        >{{ task.title }}</span
+        >{{ task.title }} </span
       >
       <input
         v-else
@@ -25,7 +25,7 @@
         v-focus
       />
     </div>
-    <select
+    <select 
       class="list-item-category-select"
       v-model="category"
       @change="doneEdit"
@@ -33,11 +33,11 @@
     >
       <option selected value=""></option>
       <option
-        v-for="(category, index) in categories"
+        v-for="(category) in categories"
         v-bind:value="category.id"
-        :key="index"
+        :key="category.id"
       >
-        {{ category.name }}
+        {{ category.name }} 
       </option>
     </select>
     <div class="list-item-remove" @click="removeTask">&times;</div>
@@ -91,9 +91,9 @@ export default {
       this.editCategory = false;
       this.$emit("finishedEdit", {
         task: {
+          id: this.id,
           title: this.title,
           completed: this.completed,
-          editing: this.editing,
           category: this.category,
         },
         id: this.id,

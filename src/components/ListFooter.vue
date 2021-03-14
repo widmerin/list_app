@@ -26,7 +26,7 @@
             v-bind:value="category.id"
             :key="index"
           >
-            {{ category.data.name }}
+            {{ category.name }}
           </option>
         </select>
         <button class="waves-effect waves-light btn" @click="addTask">

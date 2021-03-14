@@ -7,8 +7,8 @@
             <li class="tab" v-for="(list, index) in lists" :key="index">
               <a
                 href="#"
-                v-bind:class="{ active: index == currentListId }"
-                @click="selectList(index)"
+                v-bind:class="{ active: list.id == currentListId }"
+                @click="selectList(list.id)"
                 >{{ list.name }}</a
               >
             </li>
@@ -62,7 +62,7 @@
           v-if="showCategoryDropdown"
         >
           <li v-for="(category, index) in categories" :key="index">
-            <a href="#" @click="selectCategory(index)">{{
+            <a href="#" @click="selectCategory(category.id)">{{
               category.name
             }}</a>
           </li>
@@ -170,13 +170,16 @@ export default {
     selectCategory(id) {
       this.showCategoryDropdown = false;
       this.selectedCategory = this.getCategoryName(id);
-      this.$emit("selectedCategory", getReferenceId(this.categories[id]));
+      this.$emit("selectedCategory", id);
     },
     refreshData() {
       this.$emit("refreshedData");
     },
     getCategoryName(id) {
-      return this.categories[id].name;
+      let category =  this.categories.filter(x => x.id == id);
+      if (category) {
+        return category[0].name
+      }
     },
     removeCategory() {
       this.selectedCategory = "";

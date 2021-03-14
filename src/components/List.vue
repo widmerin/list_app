@@ -20,6 +20,7 @@
           enter-active-class="animated fadeInUp"
           leave-active-class="animated fadeOutDown"
         >
+        {{tasksFilteredActive}}
           <list-item
             v-for="(task, index) in tasksFilteredActive"
             :key="componentListItem + task.id"
@@ -33,8 +34,7 @@
       </div>
       <div
         class="list-content-tasks-completed"
-        v-if="this.tasks && tasksFilteredCompleted && tasksFilteredCompleted.length"
-      >
+        v-if="this.tasks && tasksFilteredCompleted && tasksFilteredCompleted.length">
         <p class="tasks-title">
           Completed Tasks
           <i
@@ -81,12 +81,13 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = process.env.GRIDSOME_API_URL
 const supabaseKey = process.env.GRIDSOME_APP_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
-
+ 
 import {
-  deleteCategory,
-  deleteList,
+  createTask,
   deleteTask,
-  getReferenceId,
+  getCategories,
+  getLists,
+  getTasks,
   updateTask,
 } from "@/helpers/utils";
 
@@ -104,7 +105,7 @@ export default {
       componentListItem: 0,
       newTask: "",
       idForTask: 4,
-      currentCategory: 1,
+      currentCategory: 0,
       currentListId: 1,
       beforeEditCache: "",
       showCompletedTasks: false,
@@ -114,8 +115,41 @@ export default {
     };
   },
   mounted() {
-    this.fetchData();
-  },
+    supabase
+      .from('Tasks')
+      .on('INSERT', payload => {
+        console.log('Change received!', payload)
+        this.tasks.push(payload.new)
+
+      })
+      .subscribe()
+      supabase
+        .from('Tasks')
+        .on('UPDATE', payload => {
+          console.log('Change received!', payload)
+          let index = this.tasks.map((item) => item.id).indexOf(payload.new.id)
+          this.tasks[index].title = payload.new.title
+          this.tasks[index].category = payload.new.category
+          this.tasks[index].completed = payload.new.completed
+
+        console.log("updated index" +index)
+          this.forceRerender()
+        })
+        .subscribe()
+
+      supabase
+      .from('Tasks')
+      .on('DELETE', payload => {
+        console.log('Change received!', payload)
+        let index = this.tasks.map((item) => item.id).indexOf(payload.old.id)
+        this.tasks.splice(index, 1);
+
+      })
+      .subscribe()
+
+
+    },
+      
   computed: {
     tasksFilteredActive: {
       get() {
@@ -139,14 +173,9 @@ export default {
   },
   async created() {
     this.loaded = true;
-    let { data: Lists } = await supabase.from('Lists').select('*');
-    this.lists = Lists
-    let { data: Categories } = await supabase.from('Categories').select('*');
-    this.categories = Categories
-    let { data: Tasks } = await supabase
-      .from('Tasks')
-      .select('*')
-    this.tasks = Tasks  
+    this.lists = await getLists()
+    this.categories = await getCategories()
+    this.tasks = await getTasks()  
   },
   methods: {
         fetchData(){
@@ -154,9 +183,7 @@ export default {
     },
     filterTasksByCategory: function (tasks) {
       if (this.currentCategory != 0) {
-        return tasks.filter(
-          (task) => task.category == this.currentCategory
-        );
+        return tasks.filter((task) => task.category == this.currentCategory);
       }
       return tasks;
     },
@@ -167,10 +194,7 @@ export default {
       return tasks.filter((task) => task.completed);
     },
     filterTasksCurrentList: function (tasks) {
-      return tasks.filter(
-        (task) =>
-          task.list == this.lists[this.currentListId].id
-      );
+      return tasks.filter((task) => task.list == this.currentListId);
     },
     forceRerender() {
       this.componentListItem += 1;
@@ -189,21 +213,16 @@ export default {
       }
       this.forceRerender();
     },
-    addTask(title, category) {
-      const list = this.lists[this.currentListId].id;
-      axios
-        .post(`/.netlify/functions/create-task`, {
+    async addTask(title, category) {
+      const data = {
           title: title,
-          category: category,
-          list: list,
+          category: category ? category : NULL,
+          list: this.currentListId,
           completed: false,
-        })
-        .then((response) => {
-          this.tasks.push(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      }
+
+      const task = await createTask(data)
+
     },
     addList(name) {
       axios
@@ -230,10 +249,8 @@ export default {
         });
     },
     removeTask(id) {
-      let index = this.tasks.map((item) => item.id).indexOf(id);
       // Delete Task in DB
       deleteTask(id);
-      this.tasks.splice(index, 1);
     },
     removeList(id, index) {
       // delete all tasks from removed list
@@ -242,7 +259,7 @@ export default {
       );
       removeTasks.forEach((task) => {
         console.log("delete" + task.id);
-        deleteTask(task.id);
+       // deleteTask(task.id);
       });
       deleteList(id);
       this.lists.splice(index, 1);
@@ -253,17 +270,10 @@ export default {
       this.categories.splice(index, 1);
     },
     finishedEdit(data) {
-      console.log(data.id);
-      let index = this.tasks
-        .map((item) => item.id)
-        .indexOf(data.id);
 
-      this.tasks[index].data.title = data.task.title;
-      this.tasks[index].data.completed = data.task.completed;
-      this.tasks[index].data.category = data.task.category;
 
       // Update Task in DB
-      updateTask(data.id, data.task);
+      updateTask(data.task);
     },
     refreshData() {
       this.fetchData();

@@ -1,49 +1,58 @@
-import axios from 'axios';
-function createTask(title,category,list){
-      axios.post(`/.netlify/functions/create-task`, {
-          title: title,
-          category: category,
-          list: list,
-          completed: false,
-      })
-      .then(response => {
-        return response.data
-      })
-      .catch(function (error) {
-          console.log(error);
-      })
-}
-function deleteTask(id){
-  axios.delete(`/.netlify/functions/delete-task/${id}`)
-  .catch(function (error) {
-      console.log(error);
-  })
-}
-
-function deleteList(id){
-  axios.delete(`/.netlify/functions/delete-list/${id}`)
-  .catch(function (error) {
-      console.log(error);
-  })
-}
-
-function deleteCategory(id){
-  axios.delete(`/.netlify/functions/delete-category/${id}`)
-  .catch(function (error) {
-      console.log(error);
-  })
-}
-
-function updateTask(id, data){
-  axios.put(`/.netlify/functions/update-task/${id}`, data)
-  .catch(function (error) {
-      console.log(error);
-  })
-}
+import { createClient } from '@supabase/supabase-js'
+const supabaseUrl = process.env.GRIDSOME_API_URL
+const supabaseKey = process.env.GRIDSOME_APP_KEY
+const supabase = createClient(supabaseUrl, supabaseKey)
 
 
-function getReferenceId(element) {
-      return element.ref['@ref'].id
+/**
+ *  Add a new task to supabase
+ */
+ async function createTask(task) {
+  try {
+    const { data, error } = await supabase
+      .from('Tasks')
+      .insert(task)
+
+    if (error) {
+      alert(error.message)
+      console.error('There was an error inserting', error)
+      return null
     }
+    return data
+  } catch (err) {
+    alert('Error')
+    console.error('Unknown problem inserting to db', err)
+    return null
+  }
+}
 
-export { deleteCategory, deleteList, deleteTask, updateTask, getReferenceId };
+async function getLists() {
+  let { data: Lists } = await supabase.from('Lists').select('*');
+  return Lists
+}
+
+async function getCategories() {
+  let { data: Categories } = await supabase.from('Categories').select('*');
+  return Categories
+}
+
+async function getTasks() {
+  let { data: Tasks } = await supabase.from('Tasks').select('*');
+  return Tasks
+}
+
+async function updateTask(task) {
+  const { data, error } = await supabase
+  .from('Tasks')
+  .update(task)
+  .eq('id', task.id)
+}
+
+async function deleteTask(id) {
+  const { data, error } = await supabase
+  .from('Tasks')
+  .delete()
+  .eq('id', id)
+}
+
+export { createTask, getCategories, deleteTask, getLists, getTasks, updateTask }
