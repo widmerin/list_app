@@ -91,6 +91,10 @@ export default {
   },
   mounted() {
     document.addEventListener("click", this.handleClickOutside);
+        // auto focus
+    this.$nextTick(function () {
+      this.$refs.input.focus();
+    });
   },
   destroyed() {
     document.removeEventListener("click", this.handleClickOutside);
