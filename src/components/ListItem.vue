@@ -27,7 +27,7 @@
     </div>
     <select 
       class="list-item-category-select"
-      v-model="category"
+      v-model="task.category"
       @change="doneEdit"
       dir="rtl"
     >
@@ -94,7 +94,7 @@ export default {
           id: this.id,
           title: this.title,
           completed: this.completed,
-          category: this.category,
+          category: this.task.category,
         },
         id: this.id,
       });

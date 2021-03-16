@@ -20,7 +20,6 @@
           enter-active-class="animated fadeInUp"
           leave-active-class="animated fadeOutDown"
         >
-        {{tasksFilteredActive}}
           <list-item
             v-for="(task, index) in tasksFilteredActive"
             :key="componentListItem + task.id"
