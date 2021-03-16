@@ -12,7 +12,7 @@
       <div class="list-footer-modal-form">
         <button class="list-footer-modal-close" @click="closeModal()">x</button>
         <h5>New Task</h5>
-        <autocomplete :items="suggestions" @inputSearch="input" />
+        <autocomplete :items="suggestions" @inputSearch="input"  @addTask="addTask"/>
         <!--  <input type="text" placeholder="Task" ref="input" class="list-footer-modal-task" v-model="newTask" v-on:keyup.enter="addTask">-->
         <select
           class="list-footer-modal-category"
@@ -73,6 +73,7 @@ export default {
       this.showModal = true;
       this.newTask = "";
       this.newCategory = "";
+      window.scrollTo(0,0);
     },
     closeModal() {
       this.showModal = false;

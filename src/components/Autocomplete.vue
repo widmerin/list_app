@@ -65,6 +65,7 @@ export default {
       this.search = this.results[this.arrowCounter];
       this.isOpen = false;
       this.arrowCounter = -1;
+      this.$emit("addTask", this.search);
     },
     handleClickOutside(evt) {
       if (!this.$el.contains(evt.target)) {
