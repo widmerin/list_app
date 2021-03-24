@@ -1,163 +1,70 @@
-<script>
-export default {
-  name: "autocomplete",
+var country_list = _.map(["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"], _.unescape);
 
-  props: {
-    items: {
-      type: Array,
-      required: false,
-      default: () => [],
-    },
-    isAsync: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-  },
-
-  data() {
-    return {
-      isOpen: false,
-      results: [],
-      search: "",
-      isLoading: false,
-      arrowCounter: 0,
-    };
-  },
-
-  methods: {
-    onChange() {
-      // Let's warn the parent that a change was made
-      this.$emit("inputSearch", this.search);
-
-      // Is the data given by an outside ajax request?
-      if (this.isAsync) {
-        this.isLoading = true;
+class Autocomplete {
+  constructor (data) {
+    this.data = data;
+  }
+  
+  highlight (string, term) {
+    if (term.length === 0) return {name: string, hl: string};
+    var regex = new RegExp( '(' + term + ')', 'gi' );
+    return {name: string, hl: string.replace(regex, "<span class='hl'>$1</span>" )};
+  }
+  
+  findOccurances(string, term) {
+    return string.toLowerCase().split(term.toLowerCase()).length - 1;
+  }
+  
+  get(term, do_highlight, startswith) {
+    if (term.length === 0) {
+      var sorted = this.data;
+    } else {
+      var term = term.toLowerCase();
+      if (startswith) {
+        var data = _.filter(this.data, o => {return o.toLowerCase().startsWith(term)});
       } else {
-        // Let's  our flat array
-        this.filterResults();
-        this.isOpen = true;
+        var data = _.filter(this.data, o => {return o.toLowerCase().indexOf(term) !== -1});
       }
-    },
-
-    filterResults() {
-      // first uncapitalize all the things
-      this.results = this.items.filter((item) => {
-        return item.toLowerCase().startsWith(this.search.toLowerCase());
-      });
-    },
-    setResult(result) {
-      this.search = result;
-      this.isOpen = false;
-      this.$emit("inputSearch", this.search);
-    },
-    onArrowDown(evt) {
-      if (this.arrowCounter < this.results.length) {
-        this.arrowCounter = this.arrowCounter + 1;
-      }
-    },
-    onArrowUp() {
-      if (this.arrowCounter > 0) {
-        this.arrowCounter = this.arrowCounter - 1;
-      }
-    },
-    onEnter() {
-      this.search = this.results[this.arrowCounter];
-      this.isOpen = false;
-      this.arrowCounter = -1;
-      this.$emit("addTask", this.search);
-    },
-    handleClickOutside(evt) {
-      if (!this.$el.contains(evt.target)) {
-        this.isOpen = false;
-        this.arrowCounter = -1;
-      }
-    },
-  },
-  watch: {
-    items: function (val, oldValue) {
-      // actually compare them
-      if (val.length !== oldValue.length) {
-        this.results = val;
-        this.isLoading = false;
-      }
-    },
-  },
-  computed() {
-    // auto focus
-    this.$nextTick(function () {
-      this.$refs.input.focus();
-    });
-  },
-  mounted() {
-    document.addEventListener("click", this.handleClickOutside);
-        // auto focus
-    this.$nextTick(function () {
-      this.$refs.input.focus();
-    });
-  },
-  destroyed() {
-    document.removeEventListener("click", this.handleClickOutside);
-  },
-};
-</script>
-
-<template>
-  <div class="autocomplete">
-    <input
-      type="text"
-      ref="input"
-      @input="onChange"
-      @click="isOpen = !isOpen"
-      v-model="search"
-      @keydown.down="onArrowDown"
-      @keydown.up="onArrowUp"
-      @keydown.enter="onEnter"
-    />
-    <ul id="autocomplete-results" v-show="isOpen" class="autocomplete-results">
-      <li class="loading" v-if="isLoading">Loading results...</li>
-      <li
-        v-else
-        v-for="(result, i) in results"
-        :key="i"
-        @click="setResult(result)"
-        class="autocomplete-result"
-        :class="{ 'is-active': i === arrowCounter }"
-      >
-        {{ result }}
-      </li>
-    </ul>
-  </div>
-</template>
-
-<style>
-.autocomplete {
-  position: relative;
+      var sorted = _.sortBy(data, o => { return -this.findOccurances(o, term) });
+    }
+    
+    if (do_highlight) {
+      return _.map(sorted, o => {return this.highlight(o, term)})
+    } else {
+      return sorted;
+    }
+  }
+  
+  setData(data) {
+    this.data = data;
+  }
+  
+  getData() {
+    return this.data;
+  }
 }
 
-.autocomplete-results {
-  position: absolute;
-  background-color: white;
-  z-index: 999;
-  padding: 0;
-  margin: 0;
-  border: 1px solid #eeeeee;
-  max-height: 200px;
-  overflow: auto;
-  width: 100%;
-}
+Vue.component('autocomplete', {
+  props: ['cl'],
+  template: '<div class="autocomplete"><span>startswith?</span><input type="checkbox"  v-model="startswith"/><span class="input-wrapper autocomplete-search-wrapper placeholder-wrapper"><input class="autocomplete-search placeholder-input" v-model="search" /><span class="placeholder autocomplete-search" v-if="startswith">{{hover}}</span></span><ul class="autocomplete-list"><li v-if="list.length===0">No results found. Try again, asshole.</li><li class="autocomplete-list-element" v-for="elem in list" v-html="elem.hl" @click="e => {search = elem.name;}" @mouseover="e => {if(startswith){search = elem.name.slice(0, search.length);}hover = elem.name;}" @mouseleave="e => {hover = null;}"></li></ul></div>',
+  data: function() {
+    return {
+      search: '',
+      placeholder: 'placeholder',
+      startswith: true,
+      hover: ''
+    }
+  },
+  computed: {
+    list: function () {
+      this.hover = '';
+      return this.cl.get(this.search, true, this.startswith);
+    }
+  }
+});
 
-.autocomplete-result {
-  list-style: none;
-  text-align: left;
-  padding: 4px 2px;
-  cursor: pointer;
-}
+var country_ac = new Autocomplete(country_list);
 
-.autocomplete-result.is-active,
-.autocomplete-result:hover {
-  background-color: #4aae9b;
-  color: white;
-}
-</style>
- 
+var autocomplete = new Vue({
+  el: '#autocomplete'
+});
