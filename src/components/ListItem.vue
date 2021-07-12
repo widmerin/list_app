@@ -91,12 +91,12 @@ export default {
       this.editCategory = false;
       this.$emit("finishedEdit", {
         task: {
-          id: this.id,
+          id: this.task.id,
           title: this.title,
           completed: this.completed,
           category: this.task.category,
         },
-        id: this.id,
+        id: this.task.id,
       });
     },
     editTask() {
