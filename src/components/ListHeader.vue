@@ -100,7 +100,7 @@
   </header>
 </template>
 <script>
-import { getReferenceId } from "@/helpers/utils";
+import { getReferenceId } from "@/helpers/supabase";
 export default {
   name: "list-header",
   props: {

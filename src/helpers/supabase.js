@@ -13,6 +13,7 @@ async function createCategory(category) {
       console.error('There was an error inserting', error)
       return null
     }
+    console.log("created category" + JSON.stringify(task));
     return data
   } catch (err) {
     alert('Error')
@@ -31,6 +32,7 @@ async function createList(list) {
       console.error('There was an error inserting', error)
       return null
     }
+    console.log("created list" + JSON.stringify(list));
     return data
   } catch (err) {
     alert('Error')
@@ -49,6 +51,7 @@ async function createTask(task) {
       console.error('There was an error inserting', error)
       return null
     }
+    console.log("created task" + JSON.stringify(task));
     return data
   } catch (err) {
     console.error('Unknown problem inserting to db', err)
@@ -72,10 +75,23 @@ async function getTasks() {
 }
 
 async function updateTask(task) {
-  const { data, error } = await supabase
-  .from('Tasks')
-  .update(task)
-  .eq('id', task.id)
+  try {
+    const { data, error } = await supabase
+    .from('Tasks')
+    .update(task)
+    .eq('id', task.id)
+
+
+  if (error) {
+    console.error('There was an error updateing task', error)
+    return null
+  }
+  console.log("updated task" + JSON.stringify(task));
+  return data
+} catch (err) {
+  console.error('Unknown problem inserting to db', err)
+  return null
+}
 }
 
 async function deleteCategory(id) {

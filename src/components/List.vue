@@ -92,7 +92,7 @@ import {
   getLists,
   getTasks,
   updateTask,
-} from "@/helpers/utils";
+} from "@/helpers/supabase";
 
 export default {
   components: {
@@ -210,7 +210,7 @@ export default {
       }
   
       const task = await createTask(data)
-
+      this.refreshData();
     },
 
     removeTask(id) {
@@ -237,6 +237,7 @@ export default {
     finishedEdit(data) {
       // Update Task in DB
       updateTask(data.task);
+      this.refreshData();
     },
     refreshData() {
       this.fetchData();
