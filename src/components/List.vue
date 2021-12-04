@@ -216,6 +216,8 @@ export default {
     removeTask(id) {
       // Delete Task in DB
       deleteTask(id);
+            this.refreshData();
+
     },
     removeList(id, index) {
       // delete all tasks from removed list
